@@ -1,98 +1,99 @@
-// app/editorial/page.tsx
+'use client';
 
-import Link from 'next/link';
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import { getEditorialMembers, EditorialMember } from '@/lib/strapi';  // функцын нэр зөв байгаа эсэхээ шалга
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'; // eslint-disable-line @typescript-eslint/no-unused-vars
 
-const navItems = [
-  { label: 'Сэтгүүлийн тухай', href: '/about' },
-  { label: 'Редакцын зөвлөл', href: '/editorial' },
-  { label: 'Сүүлийн дугаар', href: '/latest' },
-  { label: 'Архив', href: '/archive' },
-  { label: 'Хүсэлт илгээх холбоо барих', href: '/contact' },
-];
 
-export default function EditorialPage() {
+export default function EditorialBoard() {
+  const [members, setMembers] = useState<EditorialMember[]>([]);  // эсвэл зөв type
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadMembers() {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getEditorialMembers();
+        setMembers(data);
+      } catch (error) {
+  console.error('Editorial load error:', error);
+  setError('Редакцын гишүүдийн мэдээллийг ачаалахад алдаа гарлаа');
+} finally {
+        setLoading(false);
+      }
+    }
+    loadMembers();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-black transition-colors duration-500">
-      {/* Хөх Navbar */}
-      <nav className="bg-blue-800 text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">arXiv Explorer</h1>
-
-            <ul className="flex items-center gap-8">
-              {navItems.map((item) => (
-                <li key={item.label}>
-                  <Link href={item.href} className="hover:text-blue-200 transition">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-      {/* Гол контент */}
-      <div className="container mx-auto px-6 py-16 max-w-5xl">
-        <h1 className="text-5xl font-extrabold text-center text-blue-800 dark:text-blue-400 mb-12">
-          Редакцын зөвлөл
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-black py-12">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <h1 className="text-4xl md:text-5xl font-bold text-center text-slate-900 dark:text-slate-100 mb-12">
+          Сэтгүүлийн Зөвлөл
         </h1>
 
-        <div className="prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
-          <p className="lead text-xl mb-8">
-            Манай сэтгүүлийн редакцын зөвлөл нь эрдэм шинжилгээний өндөр чанартай өгүүлэл нийтлэхэд чухал үүрэг гүйцэтгэдэг.
-          </p>
-
-          <h2 className="text-3xl font-bold text-blue-800 dark:text-blue-300 mt-12 mb-8">
-            Ерөнхий редактор
-          </h2>
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-12">
-            <div className="flex flex-col md:flex-row items-center gap-8">
-              <div className="bg-gray-200 dark:bg-gray-700 border-2 border-dashed rounded-xl w-40 h-40" />
-              <div>
-                <h3 className="text-2xl font-bold">Проф. Др. Бат-Эрдэнэ</h3>
-                <p className="text-lg text-gray-600 dark:text-gray-400">ШУТИС-ийн профессор</p>
-                <p className="mt-4">Хиймэл оюун ухаан, машин сургалтын чиглэлээр 20+ жил ажилласан туршлагатай.</p>
-              </div>
-            </div>
+        {loading ? (
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div>
+            <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">Ачаалж байна...</p>
           </div>
-
-          <h2 className="text-3xl font-bold text-blue-800 dark:text-blue-300 mt-12 mb-8">
-            Редакцын зөвлөлийн гишүүд
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-              <h3 className="text-xl font-bold mb-2">Др. Сувд</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">МУИС-ийн дэд профессор</p>
-              <p>Компьютерийн алсын хараа, өгөгдлийн шинжлэх ухаан</p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-              <h3 className="text-xl font-bold mb-2">Др. Энхбат</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">ШУА-ийн эрдэм шинжилгээний ажилтан</p>
-              <p>Квант тооцоолол, криптографи</p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-              <h3 className="text-xl font-bold mb-2">Проф. Оюун</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">ХААИС-ийн профессор</p>
-              <p>Био информатик, генетикийн алгоритм</p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-              <h3 className="text-xl font-bold mb-2">Др. Болд</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">МУИС-ийн багш</p>
-              <p>Машин сургалт, нейрон сүлжээ</p>
-            </div>
+        ) : error ? (
+          <div className="text-center py-20 text-red-600 dark:text-red-400 text-lg">
+            {error}
           </div>
-
-          <div className="my-12 p-8 bg-blue-50 dark:bg-blue-900/30 rounded-2xl border border-blue-200 dark:border-blue-800 text-center">
-            <p className="text-lg font-medium text-blue-800 dark:text-blue-300">
-              Редакцын зөвлөл нь өгүүллийн чанар, шинжлэх ухааны үнэн зөвийг хангахад бүх хүчээ дайчилдаг.
-            </p>
+        ) : members.length === 0 ? (
+          <div className="text-center py-20 text-slate-600 dark:text-slate-400 text-lg">
+            Одоогоор сэтгүүлийн зөвлөлийн мэдээлэл байхгүй байна.
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {members.map((member) => (
+              <div
+  key={member.id}
+  className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-slate-200 dark:border-gray-700 flex flex-col items-center p-6 text-center"
+>
+{/* Зургийн блок – дотор нь нэр, текст, overlay огт байхгүй */}
+<div className="relative w-48 h-48 mb-6 mx-auto rounded-full overflow-hidden border-4 border-blue-500 shadow-lg">
+  {member.photo ? (
+    <Image
+      src={member.photo}
+      alt={`${member.name} ${member.surname || ''}`}
+      fill
+      className="object-cover"           // ← ЭНД object-cover биш object-contain болгосон
+      unoptimized
+    />
+  ) : (
+    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+      <span className="text-gray-500 text-4xl">?</span>
+    </div>
+  )}
+</div>
+
+<h3 className="text-2xl font-bold text-center mb-2">
+  {member.surname || ''} {member.name || 'Нэр байхгүй'}
+</h3>
+
+<p className="text-blue-600 font-medium text-center text-lg">
+  {member.position || 'Албан тушаал байхгүй'}
+</p>
+
+<p className="text-gray-700 dark:text-gray-300 text-center mt-3">
+  {member.affiliation || 'Харьяалал байхгүй'}
+</p>
+
+<p className="mt-4 text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+  {member.bio || 'Дэлгэрэнгүй мэдээлэл бэлэн болно...'}
+</p>
+
+</div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
