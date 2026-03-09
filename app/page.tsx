@@ -1,123 +1,87 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+// app/page.tsx эсвэл archive/page.tsx дотор
 import Image from 'next/image';
-import { getArticles, Article } from '@/lib/strapi';
+import Link from 'next/link';
+import { getJournalInfo } from '@/lib/strapi';  // шинэ функц үүсгэнэ
+export const dynamic = 'force-dynamic';
 
-export default function Home() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  // 1. Зөвхөн эхний удаа нийтлэл татна
-  useEffect(() => {
-  async function fetchData() {
-    setLoading(true);
-    const data = await getArticles();
-    setArticles(data);
-    setFilteredArticles(data); // ← энд initial утга тохируулах нь зөв (mount үед)
-    setLoading(false);
-  }
-  fetchData();
-}, []); // хоосон dependency → зөвхөн mount үед
-
-  // 2. Хайлтын үед шүүх (effect дотор setState-г шууд дуудахгүй)
-  useEffect(() => {
-    // Хайлт хоосон бол бүх нийтлэлийг харуулна
-    if (!searchTerm.trim()) {
-      setFilteredArticles(articles);
-      return;
-    }   
-
-    const lowerSearch = searchTerm.toLowerCase();
-    const filtered = articles.filter(article =>
-      article.title.toLowerCase().includes(lowerSearch) ||
-      article.summary.toLowerCase().includes(lowerSearch) ||
-      article.authors.toLowerCase().includes(lowerSearch)
-    );
-
-    setFilteredArticles(filtered);
-  }, [searchTerm, articles]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl">Ачаалж байна...</p>
-      </div>
-    );
-  }
+export default async function Home() {
+  const journal = await getJournalInfo();  // Strapi-аас 1 entry татна
 
   return (
-    <main className="container mx-auto py-12 px-4">
-      {/* Хайлтын талбар */}
-      <div className="max-w-2xl mx-auto mb-12">
-        <input
-          type="text"
-          placeholder="Гарчиг, танилцуулга эсвэл зохиогчоор хайх..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-5 py-4 text-lg rounded-full border-2 border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-md"
-        />
-      </div>
-
-      <h1 className="text-4xl md:text-5xl font-bold text-center mb-12">
-        Нийтлэлүүд
-        {searchTerm && ` (${filteredArticles.length} үр дүн)`}
-      </h1>
-
-      {filteredArticles.length === 0 ? (
-        <p className="text-center text-xl text-gray-600 py-10">
-          {searchTerm ? 'Хайлтын үр дүн олдсонгүй' : 'Одоогоор нийтлэл байхгүй байна'}
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredArticles.map((article) => (
-            <div
-              key={article.id}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105"
-            >
-              {article.coverImage && (
-                <div className="relative h-48">
-                  <Image
-                    src={article.coverImage}
-                    alt={article.title}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                </div>
-              )}
-
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-3 line-clamp-2">
-                  {article.title}
-                </h3>
-
-                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
-                  {article.summary}
-                </p>
-
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span>{article.authors}</span>
-                  <span>{new Date(article.published).toLocaleDateString('mn-MN')}</span>
-                </div>
-
-                {article.pdfUrl && article.pdfUrl !== '#' && (
-                  <a
-                    href={article.pdfUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-block text-blue-600 hover:underline"
-                  >
-                    PDF унших →
-                  </a>
-                )}
-              </div>
+    <main className="min-h-screen bg-gray-50">
+      {/* Дээд хэсэг – сэтгүүлийн нэр + лого */}
+      <header className="bg-teal-700 text-white py-8">
+        <div className="container mx-auto px-4 text-center">
+          {journal.journalLogoUrl && (
+            <div className="mb-4">
+              <Image
+                src={journal.journalLogoUrl}
+                alt={journal.journalName}
+                width={200}
+                height={100}
+                className="mx-auto"
+              />
             </div>
-          ))}
+          )}
+          <h1 className="text-4xl md:text-5xl font-bold">
+            {journal.journalName || 'ТӨРИЙН УДИРДЛАГА СЭТГҮҮЛ'}
+          </h1>
         </div>
-      )}
+      </header>
+
+      {/* Дэлгэрэнгүй мэдээлэл */}
+      <section className="container mx-auto py-12 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Focus and Scope */}
+          <div className="bg-white p-8 rounded-lg shadow">
+            <h2 className="text-2xl font-bold mb-4 text-teal-700">Focus and Scope</h2>
+            <div dangerouslySetInnerHTML={{ __html: journal.focusAndScope || '' }} />
+          </div>
+
+          {/* About */}
+          <div className="bg-white p-8 rounded-lg shadow">
+            <h2 className="text-2xl font-bold mb-4 text-teal-700">About</h2>
+            <div dangerouslySetInnerHTML={{ __html: journal.aboutText || '' }} />
+          </div>
+
+          {/* Хамтрагч байгууллагууд + лого */}
+          <div className="bg-white p-8 rounded-lg shadow">
+            <h2 className="text-2xl font-bold mb-4 text-teal-700">Partners</h2>
+            <div className="grid grid-cols-2 gap-4">
+  {journal.partners?.map((partner: { 
+    partnerName: string;
+    partnerLogo?: string;
+    partnerUrl?: string;
+  }, index: number) => (
+    <Link key={index} href={partner.partnerUrl || '#'} target="_blank">
+      <div className="text-center hover:opacity-80 transition">
+        {partner.partnerLogo && (
+          <Image
+            src={partner.partnerLogo}
+            alt={partner.partnerName}
+            width={120}
+            height={60}
+            className="mx-auto mb-2"
+          />
+        )}
+        <p className="text-sm font-medium">{partner.partnerName}</p>
+      </div>
+    </Link>
+  ))}
+</div>
+
+            {/* EBSCO, DOI лого */}
+            <div className="mt-8 flex justify-center gap-8">
+              {journal.ebscoLogo && (
+                <Image src={journal.ebscoLogo} alt="EBSCO" width={100} height={40} />
+              )}
+              {journal.doiLogo && (
+                <Image src={journal.doiLogo} alt="DOI" width={100} height={40} />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

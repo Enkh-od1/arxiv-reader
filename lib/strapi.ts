@@ -1,4 +1,4 @@
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+const STRAPI_URL = 'http://192.168.10.31:1337';
 
 // Strapi-ээс ирэх raw item-ийн type (nested structure-тэй)
 interface StrapiRawArticle {
@@ -25,6 +25,7 @@ interface StrapiRawArticle {
     };
     volume?: string;
     issue?: string;
+    country?: string;
   };
 }
 
@@ -40,6 +41,7 @@ export interface Article {
   category: string;
   volume?: string;
   issue?: string;
+  country?: string;
 }
 
 interface StrapiRawEditorial {
@@ -102,6 +104,7 @@ export async function getArticles(): Promise<Article[]> {
         category: attr.category?.data?.attributes?.name || 'Бүгд',
         volume: attr.volume || 'Тодорхойгүй',
         issue: attr.issue || 'Тодорхойгүй',
+        country: attr.country || 'Тодорхойгүй',
       };
     });
   } catch (error) {
@@ -141,5 +144,71 @@ export async function getEditorialMembers(): Promise<EditorialMember[]> {
   } catch (error) {
     console.error('Editorial members fetch error:', error);
     return [];
+  }
+}
+
+export async function getArticleById(id: string): Promise<Article | null> {
+  try {
+    const res = await fetch(
+      `${STRAPI_URL}/api/articles/${id}?populate=*`,
+      { cache: 'no-store' }
+    );
+
+    if (!res.ok) return null;
+
+    const json = await res.json();
+    const attr = json.data.attributes || {};
+
+    return {
+      id: json.data.id,
+      title: attr.title || 'Гарчиггүй',
+      summary: attr.summary || 'Танилцуулга байхгүй',
+      pdfUrl: attr.pdfUrl || '#',
+      published: attr.releaseDate || new Date().toISOString(),
+      authors: attr.authors || 'Зохиогч тодорхойгүй',
+      coverImage: attr.coverImage?.data?.attributes?.url
+        ? `${STRAPI_URL}${attr.coverImage.data.attributes.url}`
+        : null,
+        category: attr.category?.data?.attributes?.name || 'Тодорхойгүй',
+        country: attr.country || 'Тодорхойгүй',
+      // улс нэмэх бол attr.country эсвэл affiliation ашиглаж болно
+    };
+  } catch (error) {
+    console.error('Article fetch error:', error);
+    return null;
+  }
+}
+
+export async function getJournalInfo() {
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/journal-infos?populate=*`, {
+      cache: 'no-store',
+    });
+
+    if (!res.ok) return {};
+
+    const json = await res.json();
+    const data = json.data[0]?.attributes || {};
+
+    return {
+      journalName: data.journalName || '',
+      journalLogoUrl: data.journalLogo?.data?.attributes?.url
+        ? `${STRAPI_URL}${data.journalLogo.data.attributes.url}`
+        : null,
+      focusAndScope: data.focusAndScope || '',
+      issn: data.issn || '',
+      eissn: data.eissn || '',
+      aboutText: data.aboutText || '',
+      partners: data.partners || [],
+      ebscoLogo: data.ebscoLogo?.data?.attributes?.url
+        ? `${STRAPI_URL}${data.ebscoLogo.data.attributes.url}`
+        : null,
+      doiLogo: data.doiLogo?.data?.attributes?.url
+        ? `${STRAPI_URL}${data.doiLogo.data.attributes.url}`
+        : null,
+    };
+  } catch (error) {
+    console.error('Journal info fetch error:', error);
+    return {};
   }
 }
