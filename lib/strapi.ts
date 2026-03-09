@@ -76,10 +76,9 @@ export interface EditorialMember{
 
 export async function getArticles(): Promise<Article[]> {
   try {
-    const res = await fetch(
-      `${STRAPI_URL}/api/articles?populate=*&sort=releaseDate:desc&pagination[limit]=10`,
-      { cache: 'no-store' }
-    );
+    const res = await fetch('http://192.168.10.31:1337/api/articles?populate=*&sort=releaseDate:desc&pagination[limit]=10', {
+  cache: 'no-store',
+});
 
     if (!res.ok) {
       console.error('Articles fetch failed:', res.status);
