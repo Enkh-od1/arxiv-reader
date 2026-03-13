@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // Дотоод IP ашиглаж байгаа үед үүнийг заавал true болгоно
+    unoptimized: true, 
     remotePatterns: [
       {
         protocol: 'http',
@@ -8,18 +10,6 @@ const nextConfig = {
         port: '1337',
         pathname: '/uploads/**',
       },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '1337',
-        pathname: '/uploads/**',
-      },
-      // Хэрэв Render эсвэл өөр домэйн дээр байгаа бол нэмж болно
-      // {
-      //   protocol: 'https',
-      //   hostname: 'strapi-arxiv-new.onrender.com',
-      //   pathname: '/uploads/**',
-      // },
     ],
   },
 };

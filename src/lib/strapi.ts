@@ -1,5 +1,6 @@
 const STRAPI_URL = 'http://192.168.10.31:1337';
 
+
 // Strapi-ээс ирэх raw item-ийн type (nested structure-тэй)
 interface StrapiRawArticle {
   id: number;
@@ -28,6 +29,34 @@ interface StrapiRawArticle {
     country?: string;
   };
 }
+
+
+// lib/strapi.ts эсвэл types/archive.ts файлд нэм (эсвэл байгаа бол өргөтгө)
+interface ArchiveItem {
+  id: number;
+  attributes: {
+    title: string;
+    subtitle?: string;
+    year?: number;
+    seasonOrNo?: string;
+    publishedDate: string;
+    cover?: {
+      data?: {
+        attributes: {
+          url: string;
+        };
+      };
+    };
+    pdf?: {
+      data?: {
+        attributes: {
+          url: string;
+        };
+      };
+    };
+  };
+}
+
 
 // Next.js-д ашиглах type
 export interface Article {
@@ -63,6 +92,54 @@ interface StrapiRawEditorial {
   };
 }
 
+// Мэдээллийн хэсгийн төрөл
+interface StrapiSection {
+  sectionTitle: string;
+  sectionDescription?: string;
+  sectionLogo?: {
+    data?: {
+      attributes?: {
+        url: string;
+      };
+    };
+  };
+}
+
+interface StrapiPartner {
+  partnerName: string;
+  partnerUrl?: string;
+  partnerLogo?: {
+    data?: {
+      attributes?: {
+        url: string;
+      };
+    };
+  };
+}
+
+export interface JournalInfo {
+  journalName?: string;
+  journalLogoUrl?: string;
+  focusAndScope?: string;
+  issn?: string;
+  eissn?: string;
+  aboutText?: string;
+  partners: Partner[];
+  informationSections: InfoSection[];
+}
+
+export interface Partner {
+  partnerName: string;
+  partnerLogo?: string;
+  partnerUrl?: string;
+}
+
+export interface InfoSection {
+  sectionTitle: string;
+  sectionDescription?: string;
+  sectionLogo?: string;
+}
+
 export interface EditorialMember{
   id: number;
   name: string;
@@ -73,6 +150,8 @@ export interface EditorialMember{
   photo: string | null;
   order?: number;
 }
+
+
 
 export async function getArticles(): Promise<Article[]> {
   try {
@@ -180,34 +259,107 @@ export async function getArticleById(id: string): Promise<Article | null> {
 
 export async function getJournalInfo() {
   try {
-    const res = await fetch(`${STRAPI_URL}/api/journal-infos?populate=*`, {
-      cache: 'no-store',
-    });
+    // ?populate=* гэхийн оронд бүх түвшний зургийг авахын тулд илүү нарийн populate бичсэн
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/journal-infos?populate[informationSections][populate]=*&populate[partners][populate]=*`,
+      { cache: 'no-store' }
+    );
 
-    if (!res.ok) return {};
+    if (!res.ok) return null;
 
     const json = await res.json();
-    const data = json.data[0]?.attributes || {};
+    
+    // Эхний датаг авах
+    const data = json.data?.[0]?.attributes;
+    if (!data) return null;
 
     return {
-      journalName: data.journalName || '',
-      journalLogoUrl: data.journalLogo?.data?.attributes?.url
-        ? `${STRAPI_URL}${data.journalLogo.data.attributes.url}`
-        : null,
       focusAndScope: data.focusAndScope || '',
-      issn: data.issn || '',
-      eissn: data.eissn || '',
-      aboutText: data.aboutText || '',
-      partners: data.partners || [],
-      ebscoLogo: data.ebscoLogo?.data?.attributes?.url
-        ? `${STRAPI_URL}${data.ebscoLogo.data.attributes.url}`
-        : null,
-      doiLogo: data.doiLogo?.data?.attributes?.url
-        ? `${STRAPI_URL}${data.doiLogo.data.attributes.url}`
-        : null,
+      
+      // Information хэсгийг цэгцлэх
+      informationSections: data.informationSections?.map((section: StrapiSection) => ({
+        sectionTitle: section.sectionTitle,
+        sectionDescription: section.sectionDescription,
+        // Зургийн URL-ийг Strapi-ийн гүн бүтэц дотроос зөв ухаж гаргах
+        sectionLogo: section.sectionLogo?.data?.attributes?.url || null,
+      })) || [],
+
+      // Partners хэсгийг цэгцлэх
+      partners: data.partners?.map((partner: StrapiPartner) => ({
+        partnerName: partner.partnerName,
+        partnerUrl: partner.partnerUrl || '#',
+        // Зургийн URL-ийг Strapi-ийн гүн бүтэц дотроос зөв ухаж гаргах
+        partnerLogo: partner.partnerLogo?.data?.attributes?.url || null,
+      })) || [],
     };
   } catch (error) {
-    console.error('Journal info fetch error:', error);
-    return {};
+    console.error("getJournalInfo error:", error);
+    return null;
+  }
+}
+
+
+
+
+
+export async function getLatestArticle() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc&pagination[limit]=1`,
+      { cache: 'no-store' }
+    );
+
+    if (!res.ok) return null;
+
+    const json = await res.json();
+    const article = json.data?.[0]; // Эхний (хамгийн сүүлийн) нийтлэлийг авах
+
+    if (!article) return null;
+
+    // Зөвхөн хэрэгцээтэй өгөгдлүүдээ цэгцэлж буцаах
+    return {
+      title: article.attributes.title,
+      summary: article.attributes.summary,
+      // Зургийн URL-ийг эндээс авна:
+      coverImage: article.attributes.coverImage?.data?.attributes?.url || null,
+      pdfUrl: article.attributes.pdfFile?.data?.attributes?.url || null,
+    };
+  } catch (error) {
+    console.error('getLatestArticle error:', error);
+    return null;
+  }
+}
+
+
+export async function getArchives() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/archives?populate=*&sort=publishedDate:desc`,
+      { cache: 'no-store' }
+    );
+
+    if (!res.ok) {
+      console.error('Archives fetch failed:', res.status);
+      return [];
+    }
+
+    const json = await res.json();
+
+    return json.data.map((item: ArchiveItem) => ({
+      id: item.id,
+      title: item.attributes.title,
+      subtitle: item.attributes.subtitle || '',
+      year: item.attributes.year || new Date(item.attributes.publishedDate || "").getFullYear(),
+      seasonOrNo: item.attributes.seasonOrNo || '', // эсвэл subtitle-аас авч болно
+      coverImage: item.attributes.cover?.data?.attributes?.url
+        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${item.attributes.cover.data.attributes.url}`
+        : null,
+      pdfUrl: item.attributes.pdf?.data?.attributes?.url
+        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${item.attributes.pdf.data.attributes.url}`
+        : null,
+    }));
+  } catch (error) {
+    console.error('getArchives error:', error);
+    return [];
   }
 }
