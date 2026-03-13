@@ -3,6 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getLatestArticle } from '@/lib/strapi';
 import type { Partner, InformationSection } from '@/types/journal';
+export const dynamic = 'force-dynamic'; // Энийг нэмснээр Build хийх үед алдаа гарахгүй
+
 
 export default async function Home() {
   const journal = await getJournalInfo();

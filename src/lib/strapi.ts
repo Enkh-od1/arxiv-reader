@@ -261,9 +261,9 @@ export async function getJournalInfo() {
   try {
     // ?populate=* гэхийн оронд бүх түвшний зургийг авахын тулд илүү нарийн populate бичсэн
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/journal-infos?populate[informationSections][populate]=*&populate[partners][populate]=*`,
-      { cache: 'no-store' }
-    );
+  `http://127.0.0.1*`, // энд шууд IP-г нь бичнэ
+  { cache: 'no-store' }
+);
 
     if (!res.ok) return null;
 
@@ -305,9 +305,9 @@ export async function getJournalInfo() {
 export async function getLatestArticle() {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc&pagination[limit]=1`,
-      { cache: 'no-store' }
-    );
+  `http://127.0.0.1[limit]=1`, // энд мөн адил
+  { cache: 'no-store' }
+);
 
     if (!res.ok) return null;
 
