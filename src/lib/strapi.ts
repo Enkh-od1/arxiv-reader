@@ -1,4 +1,4 @@
-const STRAPI_URL = 'http://192.168.10.31:1337';
+const STRAPI_URL = 'http://jpa.naog.edu.mn:1337'; 
 
 
 // Strapi-ээс ирэх raw item-ийн type (nested structure-тэй)
@@ -155,7 +155,7 @@ export interface EditorialMember{
 
 export async function getArticles(): Promise<Article[]> {
   try {
-    const res = await fetch('http://192.168.10.31:1337/api/articles?populate=*&sort=releaseDate:desc&pagination[limit]=10', {
+    const res = await fetch('http://jpa.naog.edu.mn:1337/api/articles?populate=*&sort=releaseDate:desc&pagination[limit]=10', {
   cache: 'no-store',
 });
 

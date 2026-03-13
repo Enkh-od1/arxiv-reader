@@ -1,32 +1,13 @@
-'use client';
-
+// src/app/editorial/page.tsx
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import { getEditorialMembers, EditorialMember } from '@/lib/strapi';  // функцын нэр зөв байгаа эсэхээ шалга
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn:1337'; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { getEditorialMembers } from '@/lib/strapi';
+import type { EditorialMember } from '@/lib/strapi';
 
+// Энийг нэмснээр дата байнга шинээр ирнэ
+export const dynamic = 'force-dynamic';
 
-export default function EditorialBoard() {
-  const [members, setMembers] = useState<EditorialMember[]>([]);  // эсвэл зөв type
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function loadMembers() {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getEditorialMembers();
-        setMembers(data);
-      } catch (error) {
-  console.error('Editorial load error:', error);
-  setError('Редакцын гишүүдийн мэдээллийг ачаалахад алдаа гарлаа');
-} finally {
-        setLoading(false);
-      }
-    }
-    loadMembers();
-  }, []);
+export default async function EditorialBoard() {
+  const members: EditorialMember[] = await getEditorialMembers() || [];
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-black py-12">
@@ -35,65 +16,33 @@ export default function EditorialBoard() {
           Сэтгүүлийн Зөвлөл
         </h1>
 
-        {loading ? (
-          <div className="text-center py-20">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div>
-            <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">Ачаалж байна...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center py-20 text-red-600 dark:text-red-400 text-lg">
-            {error}
-          </div>
-        ) : members.length === 0 ? (
-          <div className="text-center py-20 text-slate-600 dark:text-slate-400 text-lg">
-            Одоогоор сэтгүүлийн зөвлөлийн мэдээлэл байхгүй байна.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {members.map((member) => (
-              <div
-  key={member.id}
-  className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-slate-200 dark:border-gray-700 flex flex-col items-center p-6 text-center"
->
-{/* Зургийн блок – дотор нь нэр, текст, overlay огт байхгүй */}
-<div className="relative w-48 h-48 mb-6 mx-auto rounded-full overflow-hidden border-4 border-blue-500 shadow-lg">
-  {member.photo ? (
-    <Image
-      src={member.photo}
-      alt={`${member.name} ${member.surname || ''}`}
-      fill
-      className="object-cover"           // ← ЭНД object-cover биш object-contain болгосон
-      unoptimized
-    />
-  ) : (
-    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-      <span className="text-gray-500 text-4xl">?</span>
-    </div>
-  )}
-</div>
-
-<h3 className="text-2xl font-bold text-center mb-2">
-  {member.surname || ''} {member.name || 'Нэр байхгүй'}
-</h3>
-
-<p className="text-blue-600 font-medium text-center text-lg">
-  {member.position || 'Албан тушаал байхгүй'}
-</p>
-
-<p className="text-gray-700 dark:text-gray-300 text-center mt-3">
-  {member.affiliation || 'Харьяалал байхгүй'}
-</p>
-
-<p className="mt-4 text-gray-600 dark:text-gray-400 text-center leading-relaxed">
-  {member.bio || 'Дэлгэрэнгүй мэдээлэл бэлэн болно...'}
-</p>
-
-</div>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {members.length > 0 ? (
+            members.map((member) => (
+              <div key={member.id} className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border border-slate-200 dark:border-gray-700">
+                {member.photo && (
+                  <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-blue-500">
+                    <Image
+                      src={member.photo}
+                      alt={`${member.name} ${member.surname}`}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <h3 className="text-xl font-bold text-center text-slate-900 dark:text-slate-100">
+                  {member.name} {member.surname}
+                </h3>
+                <p className="text-center text-blue-600 dark:text-blue-400 font-medium">{member.position}</p>
+                <p className="text-center text-slate-500 dark:text-slate-400 text-sm mt-2">{member.affiliation}</p>
+              </div>
+            ))
+          ) : (
+            <p className="col-span-full text-center text-slate-500">Мэдээлэл олдсонгүй.</p>
+          )}
+        </div>
       </div>
     </div>
   );
 }
-
