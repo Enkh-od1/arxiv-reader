@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { getEditorialMembers, EditorialMember } from '@/lib/strapi';  // функцын нэр зөв байгаа эсэхээ шалга
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'; // eslint-disable-line @typescript-eslint/no-unused-vars
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn:1337'; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 
 export default function EditorialBoard() {
