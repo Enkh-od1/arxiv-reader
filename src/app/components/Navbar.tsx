@@ -21,7 +21,7 @@ export default function Navbar() {
             </button>
 
             <Link href="/" className="text-2xl font-bold">
-              Public administration
+              Төрийн удирдлага сэтгүүл
             </Link>
           </div>
 

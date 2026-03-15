@@ -20,7 +20,7 @@ if (!journal) {
         {/* 1. Focus and Scope - Текстийг хоёр тийш нь тэлсэн */}
         <div className="lg:col-span-3 bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-teal-100">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-teal-900 text-center">
-            Focus and Scope
+            Хамрах хүрээ
           </h2>
           {/* max-w-none нэмснээр текст хоёр тийшээ бүрэн тэлнэ */}
           <div className="text-base md:text-lg lg:text-xl leading-relaxed text-gray-800 prose max-w-none">
@@ -38,7 +38,7 @@ if (!journal) {
               {latestArticle.coverImage ? (
   <div className="mb-6 w-full max-w-2xl">
     <Image
-  src={(process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.10.31:1337') + latestArticle.coverImage}
+  src={(process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn') + latestArticle.coverImage}
   alt={latestArticle.title || "Cover image"}
   width={800}
   height={450}
@@ -80,7 +80,7 @@ if (!journal) {
           {/* Information блок */}
           <div className="bg-white p-6 rounded-2xl shadow-xl border border-teal-100">
             <h2 className="text-3xl font-bold mb-6 text-teal-900 text-center">
-              Information
+              Мэдээлэл
             </h2>
             <div className="space-y-6 text-center">
               {(journal.informationSections?.length ?? 0) > 0 ? (
@@ -89,7 +89,7 @@ if (!journal) {
                     {section.sectionLogo && (
                       <div className="mx-auto mb-4 w-28 h-28 flex items-center justify-center bg-gray-50 rounded-full border-2 border-teal-200 p-3">
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.10.31:1337'}${section.sectionLogo}`}
+                          src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn'}${section.sectionLogo}`}
                           alt={section.sectionTitle || 'Section logo'}
                           width={100}
                           height={100}
@@ -114,7 +114,7 @@ if (!journal) {
           {/* Partners блок */}
 <div className="bg-white p-6 rounded-2xl shadow-xl border border-teal-100">
   <h2 className="text-3xl font-bold mb-8 text-teal-900 text-center">
-    Partners
+    Хамтрагч байгууллагууд
   </h2>
 
   <div className="flex flex-col space-y-10"> {/* Нэг мөрөнд нэг байхаар цувуулав */}
@@ -130,7 +130,7 @@ if (!journal) {
           {partner.partnerLogo && (
             <div className="w-full h-40 flex items-center justify-center bg-gray-50 rounded-xl border border-gray-200 p-6 mb-4 shadow-sm group-hover:border-teal-300">
               <Image
-                src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://192.168.10.31:1337'}${partner.partnerLogo}`}
+                src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn'}${partner.partnerLogo}`}
                 alt={partner.partnerName || 'Partner'}
                 width={200} // Зургийг илүү өргөн болгосон
                 height={150}
