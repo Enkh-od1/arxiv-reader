@@ -3,8 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getLatestArticle } from '@/lib/strapi';
 import type { Partner, InformationSection } from '@/types/journal';
+import DownloadButton from '@/components/DownloadButton';
 export const dynamic = 'force-dynamic'; // Энийг нэмснээр Build хийх үед алдаа гарахгүй
-
 
 export default async function Home() {
   const journal = await getJournalInfo();
@@ -18,9 +18,9 @@ if (!journal) {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 px-4 py-8 md:px-10">
         
         {/* 1. Focus and Scope - Текстийг хоёр тийш нь тэлсэн */}
-        <div className="lg:col-span-3 bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-teal-100">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-teal-900 text-center">
-            Хамрах хүрээ
+        <div className="lg:col-span-3 bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-blue-100">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-blue-800 text-center">
+            Сэтгүүлийн тухай товч тодорхойлолт
           </h2>
           {/* max-w-none нэмснээр текст хоёр тийшээ бүрэн тэлнэ */}
           <div className="text-base md:text-lg lg:text-xl leading-relaxed text-gray-800 prose max-w-none">
@@ -28,58 +28,56 @@ if (!journal) {
           </div>
 
           {/* Сүүлийн нийтлэл (Archive-аас хамгийн сүүлд нэмэгдсэн нь) */}
-          {latestArticle && (
-            <div className="mt-10 pt-8 border-t border-gray-200">
-              <p className="text-lg font-semibold text-teal-800 mb-4">
-                Сүүлийн нийтлэл:
-              </p>
-              
-              {/* Нийтлэлийн ковер зураг */}
-              {latestArticle.coverImage ? (
-  <div className="mb-6 w-full max-w-2xl">
-    <Image
-  src={(process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn') + latestArticle.coverImage}
-  alt={latestArticle.title || "Cover image"}
-  width={800}
-  height={450}
-  unoptimized
-      className="rounded-xl shadow-md object-cover w-full h-auto"
-    />
+{latestArticle && (
+  <div className="mt-12 pt-10 border-t border-gray-100">
+    <p className="text-xl font-bold text-[#1e293b] mb-8">
+      Сүүлийн дугаар:
+    </p>
+    
+    {/* Нийтлэлийн ковер зураг */}
+    {latestArticle.coverImage && (
+      <div className="mb-8 w-full max-w-2xl overflow-hidden rounded-xl shadow-md border border-gray-50">
+        <Image
+          src={(process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn') + latestArticle.coverImage}
+          alt={latestArticle.title || "Cover image"}
+          width={800}
+          height={450}
+          unoptimized
+          className="object-cover w-full h-auto hover:scale-105 transition-transform duration-500"
+        />
+      </div>
+    )}
+
+    <h4 className="text-2xl font-bold text-[#1e293b] mb-4 leading-tight">
+      {latestArticle.title}
+    </h4>
+    
+    {latestArticle.summary && (
+      <p className="text-[#475569] text-lg leading-8 mb-8 font-normal">
+        {latestArticle.summary}
+      </p>
+    )}
+
+    {/* page.tsx дотор */}
+{latestArticle && (
+  <DownloadButton 
+    article={{
+      id: latestArticle.id,
+      views: latestArticle.views ?? 0,      // ЭНЭ МӨРИЙГ НЭМЖ ӨГӨӨРЭЙ
+      downloads: latestArticle.downloads ?? 0, 
+      pdfUrl: latestArticle.pdfUrl
+    }} 
+  />
+)}
   </div>
-) : null}
-
-              <h4 className="text-2xl font-bold text-gray-900 mb-3">
-                {latestArticle.title}
-              </h4>
-              
-              {latestArticle.summary && (
-                <p className="text-gray-700 leading-relaxed mb-5 text-base">
-                  {latestArticle.summary}
-                </p>
-              )}
-
-              {latestArticle.pdfUrl && (
-                <a
-                  href={latestArticle.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-6 py-3 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 transition duration-300 text-base"
-                >
-                  PDF татах
-                  <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                </a>
-              )}
-            </div>
-          )}
+)}
         </div>
 
         {/* Баруун тал - Information + Partners */}
         <div className="space-y-8">
           {/* Information блок */}
-          <div className="bg-white p-6 rounded-2xl shadow-xl border border-teal-100">
-            <h2 className="text-3xl font-bold mb-6 text-teal-900 text-center">
+          <div className="bg-white p-6 rounded-2xl shadow-xl border border-blue-100">
+            <h2 className="text-3xl font-bold mb-6 text-blue-800 text-center">
               Мэдээлэл
             </h2>
             <div className="space-y-6 text-center">
@@ -112,8 +110,8 @@ if (!journal) {
 
           {/* Partners блок */}
           {/* Partners блок */}
-<div className="bg-white p-6 rounded-2xl shadow-xl border border-teal-100">
-  <h2 className="text-3xl font-bold mb-8 text-teal-900 text-center">
+<div className="bg-white p-6 rounded-2xl shadow-xl border border-blue-100">
+  <h2 className="text-3xl font-bold mb-8 text-blue-800 text-center">
     Хамтрагч байгууллагууд
   </h2>
 

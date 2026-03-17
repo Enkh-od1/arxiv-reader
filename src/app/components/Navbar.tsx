@@ -29,8 +29,7 @@ export default function Navbar() {
             <li><Link href="/about" className="hover:text-blue-200 transition">Сэтгүүлийн тухай</Link></li>
             <li><Link href="/editorial" className="hover:text-blue-200 transition">Сэтгүүлийн зөвлөл</Link></li>
             <li><Link href="/archive" className="hover:text-blue-200 transition">Архив</Link></li>
-            <li><Link href="/submit-article" className="hover:text-blue-200 transition">Хүсэлт илгээх</Link></li>
-            <li><Link href="/contact" className="hover:text-blue-200 transition">Холбоо барих</Link></li>
+            <li><Link href="/for-authors" className="hover:text-blue-200 transition">Зохиогчдод</Link></li>
           </ul>
 
           <div className="flex items-center gap-4">

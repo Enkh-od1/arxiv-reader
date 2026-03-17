@@ -57,6 +57,25 @@ interface ArchiveItem {
   };
 }
 
+// Нийтлэлийн төрлийг тодорхойлох
+
+// lib/strapi.ts
+
+export interface Niitlel {
+  id: number;
+  attributes: {
+    Title: string;
+    Year: number;
+    Author: string;
+    Summary: string;
+    Views?: number;
+    Downloads?: number;
+    Cover?: { data?: { attributes?: { url: string } } };
+    PDF_File?: { data?: { attributes?: { url: string } } };
+  };
+}
+
+
 
 // Next.js-д ашиглах type
 export interface Article {
@@ -302,33 +321,44 @@ export async function getJournalInfo() {
 
 
 
+// lib/strapi.ts
+// lib/strapi.ts доторх getLatestArticle функц:
+
+// lib/strapi.ts доторх getLatestArticle функц
+
 export async function getLatestArticle() {
+  const STRAPI_URL = 'http://jpa.naog.edu.mn:1337'; 
+  
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc&pagination[limit]=1`,
-      { cache: 'no-store' }
-    );
-
-    if (!res.ok) return null;
-
+    const res = await fetch(`${STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc&pagination[limit]=1`, { cache: 'no-store' });
     const json = await res.json();
-    const article = json.data?.[0]; // Эхний (хамгийн сүүлийн) нийтлэлийг авах
+    
+    if (!json.data || json.data.length === 0) return null;
 
-    if (!article) return null;
+    const item = json.data[0];
+    const attr = item.attributes;
 
-    // Зөвхөн хэрэгцээтэй өгөгдлүүдээ цэгцэлж буцаах
     return {
-      title: article.attributes.title,
-      summary: article.attributes.summary,
-      // Зургийн URL-ийг эндээс авна:
-      coverImage: article.attributes.coverImage?.data?.attributes?.url || null,
-      pdfUrl: article.attributes.pdfFile?.data?.attributes?.url || null,
+      id: item.id,
+      title: attr.title || attr.Title || 'Гарчиггүй',
+      summary: attr.summary || attr.Summary || 'Танилцуулга байхгүй',
+      views: attr.views ?? attr.Views ?? 0,
+      downloads: attr.downloads ?? attr.Downloads ?? 0,
+      
+      // Таны Strapi дээрх PDF_File нэршлийг яг ижилхэн болгож засав
+      pdfUrl: attr.PDF_File?.data?.attributes?.url || null,
+      
+      // Cover-ийг мөн ижил логикоор шалгах
+      coverImage: attr.Cover?.data?.attributes?.url || attr.cover?.data?.attributes?.url || null,
     };
   } catch (error) {
-    console.error('getLatestArticle error:', error);
+    console.error("Fetch error:", error);
     return null;
   }
 }
+
+
+
 
 
 export async function getArchives() {
@@ -363,3 +393,54 @@ export async function getArchives() {
     return [];
   }
 }
+
+// lib/strapi.ts
+
+export async function updateArticleStats(id: number, type: 'views', currentCount: number) {
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        data: {
+          [type]: (currentCount || 0) + 1, // Одоо байгаа тоон дээр 1-ийг нэмнэ
+        },
+      }),
+    });
+
+    if (!res.ok) throw new Error('Статистик шинэчлэхэд алдаа гарлаа');
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+// lib/strapi.ts
+// lib/strapi.ts
+// lib/strapi.ts
+// lib/strapi.ts
+export async function updateArticleViews(id: number, currentViews: number) {
+  const STRAPI_URL = 'http://jpa.naog.edu.mn:1337';
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        data: {
+          Views: Number(currentViews || 0) + 1, // Strapi дээр томоор бол Views
+        },
+      }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+
+
+
+
