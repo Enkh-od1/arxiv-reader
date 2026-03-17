@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getLatestArticle } from '@/lib/strapi';
 import type { Partner, InformationSection } from '@/types/journal';
 import DownloadButton from '@/components/DownloadButton';
+
 export const dynamic = 'force-dynamic'; // Энийг нэмснээр Build хийх үед алдаа гарахгүй
 
 export default async function Home() {
@@ -35,16 +36,16 @@ if (!journal) {
     </p>
     
     {/* Нийтлэлийн ковер зураг */}
-    {latestArticle.coverImage && (
+    {latestArticle.coverImage  && (
       <div className="mb-8 w-full max-w-2xl overflow-hidden rounded-xl shadow-md border border-gray-50">
         <Image
-          src={(process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn') + latestArticle.coverImage}
+          src={(process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn') + latestArticle.coverImage }
           alt={latestArticle.title || "Cover image"}
           width={800}
           height={450}
           unoptimized
           className="object-cover w-full h-auto hover:scale-105 transition-transform duration-500"
-        />
+        />  
       </div>
     )}
 
@@ -58,17 +59,17 @@ if (!journal) {
       </p>
     )}
 
-    {/* page.tsx дотор */}
-{latestArticle && (
+    {latestArticle.pdfUrl && (
   <DownloadButton 
     article={{
       id: latestArticle.id,
-      views: latestArticle.views ?? 0,      // ЭНЭ МӨРИЙГ НЭМЖ ӨГӨӨРЭЙ
-      downloads: latestArticle.downloads ?? 0, 
+      views: latestArticle.views ?? 0,
       pdfUrl: latestArticle.pdfUrl
     }} 
   />
 )}
+
+    {/* page.tsx дотор */}
   </div>
 )}
         </div>
