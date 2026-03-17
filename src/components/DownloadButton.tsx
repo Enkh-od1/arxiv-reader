@@ -3,19 +3,15 @@
 import { updateArticleViews } from '@/lib/strapi';
 import { useState } from 'react';
 
-// 1. 'any'-ийн оронд төрлийг нь тодорхой зааж өгнө
-interface ArticleData {
-  id: number;
-  views: number;
-  pdfUrl: string | null;
-}
-
 interface DownloadButtonProps {
-  article: ArticleData;
+  article: {
+    id: number;
+    views: number;
+    pdfUrl: string | null;
+  };
 }
 
 export default function DownloadButton({ article }: DownloadButtonProps) {
-  // Дэлгэц дээрх тоог удирдах state
   const [viewCount, setViewCount] = useState<number>(article.views || 0);
 
   const handleAction = async () => {
@@ -24,21 +20,27 @@ export default function DownloadButton({ article }: DownloadButtonProps) {
       return;
     }
 
-    // 1. Strapi руу хандаж тоог 1-ээр нэмнэ
-    const success = await updateArticleViews(article.id, viewCount);
-    
-    if (success) {
-      // 2. Дэлгэц дээрх тоог шууд 1-ээр нэмж харуулна
-      setViewCount((prev: number) => prev + 1);
+    try {
+      const success = await updateArticleViews(article.id, viewCount);
+      if (success) {
+        setViewCount((prev: number) => prev + 1);
+      }
+    } catch (error) {
+      console.error("Stats update failed:", error);
     }
-    
-    // 3. PDF файлыг нээнэ
-    window.open(article.pdfUrl, '_blank');
+
+    // ХАМГИЙН ЧУХАЛ ХЭСЭГ: URL-ийг бүтэн болгох
+    // Хэрэв зам нь /uploads/... гэж эхэлж байвал Strapi-ийн хаягийг урд нь заавал залгана
+    const strapiUrl = 'http://jpa.naog.edu.mn:1337';
+    const fullUrl = article.pdfUrl.startsWith('http') 
+      ? article.pdfUrl 
+      : `${strapiUrl}${article.pdfUrl}`;
+      
+    window.open(fullUrl, '_blank');
   };
 
   return (
     <div className="flex items-center space-x-6">
-      {/* Үзсэн тоо харагдах хэсэг */}
       <div className="flex items-center space-x-2 text-sm text-gray-500 font-medium">
         <span className="text-red-800 text-lg">👁️</span>
         <span>Үзсэн: {viewCount}</span>
