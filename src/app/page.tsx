@@ -90,6 +90,15 @@ export default async function Home() {
               Мэдээлэл
             </h2>
             <div className="space-y-8 text-center">
+              {/* 1. Мэдээлэл: Гар бичмэл хүлээн авах */}
+    <div className="group">
+      <p className="text-gray-500 mt-2 text-sm">
+        Төрийн удирдлага сэтгүүл 2026 оны эхний дугаартаа өгүүлэл авч байна. Та бүхнийг бүтээлээ ирүүлэхийг урья.
+      </p>
+      <p className="text-gray-500 mt-2 text-sm leading-relaxed">
+        Цахим шуудан : turiinudirdlaga@naog.gov.mn
+      </p>
+    </div>
               {(journal.informationSections?.length ?? 0) > 0 ? (
                 journal.informationSections?.map((section: InformationSection, index: number) => (
                   <div key={index} className="group">
@@ -112,7 +121,7 @@ export default async function Home() {
                   </div>
                 ))
               ) : (
-                <p className="text-gray-400 italic">Мэдээлэл байхгүй</p>
+                <p className="text-gray-400 italic"></p>
               )}
             </div>
 

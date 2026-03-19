@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export default function AboutPage() {
   // Аливаа дэд цэс идэвхтэй байгааг хадгалах state
-  const [activeTab, setActiveTab] = useState('policy'); // 'intro' эсвэл 'policy'
+  const [activeTab,] = useState('policy'); // 'intro' эсвэл 'policy'
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-black">

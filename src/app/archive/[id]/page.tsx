@@ -27,7 +27,7 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
             {issue.title}
           </h1>
           <div className="flex flex-wrap justify-center md:justify-start gap-4 text-slate-500 font-semibold text-sm uppercase tracking-wider">
-            <span className="bg-slate-100 px-3 py-1 rounded">Огноо: {issue.year}</span>
+            <span className="bg-slate-100 px-3 py-1 rounded">Он: {issue.year}</span>
             <span className="bg-slate-100 px-3 py-1 rounded">Дугаар: {issue.number}</span>
           </div>
         </div>
