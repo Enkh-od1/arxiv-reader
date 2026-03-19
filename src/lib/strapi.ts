@@ -23,11 +23,6 @@ export interface InformationSection {
   sectionLogo?: StrapiMedia;
 }
 
-interface JournalAttributes {
-  focusAndScope?: string;
-  partners?: Partner[];
-  informationSections?: InformationSection[];
-}
 
 export interface Article {
   id: number;
@@ -181,6 +176,7 @@ export async function getEditorialMembers() {
       name: item.attributes?.name || '',
       position: item.attributes?.position || '',
       affiliation: item.attributes?.affiliation || '',
+      bio: item.attributes?.bio || '',
       photo: item.attributes?.photo?.data?.attributes?.url 
         ? `${STRAPI_URL}${item.attributes.photo.data.attributes.url}` 
         : null,

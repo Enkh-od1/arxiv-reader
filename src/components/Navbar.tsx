@@ -26,7 +26,7 @@ export default function Navbar() {
             <Link href="/" className="text-2xl font-bold flex items-center gap-3">
   {/* Логог Next.js Image компонентоор сольсон нь: */}
   <Image 
-    src="/Logo_back.png" 
+    src="/logo_back.png" 
     alt="Logo" 
     width={75}  // w-10 нь 40px-тэй тэнцэнэ
     height={75} // h-10 нь 40px-тэй тэнцэнэ
@@ -37,7 +37,7 @@ export default function Navbar() {
           </div>
 
           <ul className="hidden lg:flex items-center gap-8">
-            <li><Link href="/about" className="hover:text-blue-200 transition">Сэтгүүлийн тухай</Link></li>
+            <li><Link href="/about" className="hover:text-blue-200 transition">Нийтлэлийн бодлого</Link></li>
             <li><Link href="/editorial" className="hover:text-blue-200 transition">Сэтгүүлийн зөвлөл</Link></li>
             <li><Link href="/archive" className="hover:text-blue-200 transition">Архив</Link></li>
             <li><Link href="/for-authors" className="hover:text-blue-200 transition">Зохиогчдод</Link></li>
@@ -59,7 +59,7 @@ export default function Navbar() {
 
         {isMenuOpen && (
           <ul className="lg:hidden mt-6 flex flex-col gap-4">
-            <li><Link href="/about" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Сэтгүүлийн тухай</Link></li>
+            <li><Link href="/about" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Нийтлэлийн бодлого</Link></li>
             <li><Link href="/editorial" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Сэтгүүлийн зөвлөл</Link></li>
             <li><Link href="/archive" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Архив</Link></li>
             <li><Link href="/submit-article" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Хүсэлт илгээх</Link></li>

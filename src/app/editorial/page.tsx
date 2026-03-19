@@ -30,11 +30,24 @@ export default async function EditorialBoard() {
                       className="object-cover"
                     />
                   </div>
+
+                  
                 )}
+
                 <h3 className="text-xl font-bold text-center text-slate-900 dark:text-slate-100">
                   {/* Эндээс {member.surname}-ийг хассан */}
                   {member.name}
                 </h3>
+
+                {member.bio && (
+      <div className="w-full">
+        {/* text-xs: affiliation-тай ижил хэмжээ, text-center: голлуулах */}
+        <p className="text-center text-slate-500 dark:text-slate-400 text-sm mt-2">
+          {member.bio}
+        </p>
+      </div>
+    )}
+
                 <p className="text-center text-blue-600 dark:text-blue-400 font-medium">{member.position}</p>
                 <p className="text-center text-slate-500 dark:text-slate-400 text-sm mt-2">{member.affiliation}</p>
               </div>

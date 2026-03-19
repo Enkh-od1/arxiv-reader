@@ -25,7 +25,7 @@ export default async function Home() {
           {/* 1. Сэтгүүлийн тухай товч тодорхойлолт */}
           <section className="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-blue-100">
   <h2 className="text-2xl md:text-3xl font-bold text-[#003d71] mb-8 text-center">
-    Сэтгүүлийн тухай товч тодорхойлолт
+    Сэтгүүлийн тухай
   </h2>
   
   {/* Текстийг Strapi редактор шиг paragraphs-ийг нь салгаж харуулах хэсэг */}
@@ -119,7 +119,7 @@ export default async function Home() {
             {/* Үүсгэн байгуулагч блок - Мэдээлэл дотор эсвэл доор нь байрлуулж болно */}
             <div className="mt-12 pt-8 border-t border-gray-100">
               <h2 className="text-2xl font-bold text-[#003d71] mb-8 text-center">
-                Үүсгэн байгуулагч
+                Эрхлэн гаргагч
               </h2>
               <div className="space-y-8">
                 {journal.partners?.map((partner: Partner, index: number) => (
