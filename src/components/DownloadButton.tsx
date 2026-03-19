@@ -6,6 +6,7 @@ import { useState } from 'react';
 interface DownloadButtonProps {
   article: {
     id: number;
+    documentId: string;
     views: number;
     pdfUrl: string | null;
   };
@@ -15,29 +16,34 @@ export default function DownloadButton({ article }: DownloadButtonProps) {
   const [viewCount, setViewCount] = useState<number>(article.views || 0);
 
   const handleAction = async () => {
-    if (!article.pdfUrl || article.pdfUrl === '#') {
-      alert("PDF файл олдсонгүй.");
-      return;
-    }
+  // 1. Линк эсвэл файл байгаа эсэхийг шалгах
+  if (!article.pdfUrl || article.pdfUrl === '#') {
+    alert("Унших файл эсвэл линк олдсонгүй.");
+    return;
+  }
 
-    try {
-      const success = await updateArticleViews(article.id, viewCount);
-      if (success) {
-        setViewCount((prev: number) => prev + 1);
-      }
-    } catch (error) {
-      console.error("Stats update failed:", error);
+  try {
+    // 2. Үзсэн тоог шинэчлэх
+    const success = await updateArticleViews(article.documentId, viewCount);
+    if (success) {
+      setViewCount((prev) => prev + 1);
     }
+  } catch (error) {
+    console.error("Stats update failed:", error);
+  }
 
     // ХАМГИЙН ЧУХАЛ ХЭСЭГ: URL-ийг бүтэн болгох
     // Хэрэв зам нь /uploads/... гэж эхэлж байвал Strapi-ийн хаягийг урд нь заавал залгана
     const strapiUrl = 'http://jpa.naog.edu.mn:1337';
-    const fullUrl = article.pdfUrl.startsWith('http') 
-      ? article.pdfUrl 
-      : `${strapiUrl}${article.pdfUrl}`;
-      
-    window.open(fullUrl, '_blank');
-  };
+  
+  // Хэрэв линк нь 'http'-ээр эхэлсэн байвал шууд нээнэ (Гадны линк)
+  // Үгүй бол Strapi-ийн хаягийг залгана (Дотоод файл)
+  const finalUrl = article.pdfUrl.startsWith('http') 
+    ? article.pdfUrl 
+    : `${strapiUrl}${article.pdfUrl}`;
+
+  window.open(finalUrl, '_blank');
+};
 
   return (
     <div className="flex items-center space-x-6">

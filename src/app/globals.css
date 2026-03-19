@@ -24,3 +24,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.prose p {
+  margin-bottom: 1.5rem; /* Параграф хоорондын зай */
+  line-height: 1.8;      /* Мөр хоорондын зай */
+  color: #334155;        /* Текстийн өнгө slate-700 */
+}
+
+.prose strong {
+  color: #003d71;        /* Тодруулсан текстийн өнгө */
+  font-weight: 700;
+}
+
+.prose p, .text-justify p {
+  margin-bottom: 1.5rem !important; /* Параграф хоорондын зай */
+  line-height: 1.8;                /* Мөр хоорондын зай */
+}

@@ -3,13 +3,16 @@
 import Link from 'next/link';
 import { Moon, Sun, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-blue-800 text-white shadow-lg sticky top-0 z-50">
+    <nav className="text-white shadow-lg sticky top-0 z-50" 
+  style={{ backgroundColor: '#003d71' }} // Логоны арын өнгөтэй яг ижил
+>
       <div className="container mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-8">
@@ -20,9 +23,17 @@ export default function Navbar() {
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
 
-            <Link href="/" className="text-2xl font-bold">
-              Төрийн удирдлага сэтгүүл
-            </Link>
+            <Link href="/" className="text-2xl font-bold flex items-center gap-3">
+  {/* Логог Next.js Image компонентоор сольсон нь: */}
+  <Image 
+    src="/Logo_back.png" 
+    alt="Logo" 
+    width={75}  // w-10 нь 40px-тэй тэнцэнэ
+    height={75} // h-10 нь 40px-тэй тэнцэнэ
+    className="object-contain"
+  />
+  <span>Төрийн удирдлага</span>
+</Link>
           </div>
 
           <ul className="hidden lg:flex items-center gap-8">

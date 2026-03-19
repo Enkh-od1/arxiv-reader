@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { getEditorialMembers } from '@/lib/strapi';
 import type { EditorialMember } from '@/lib/strapi';
 
-// Энийг нэмснээр дата байнга шинээр ирнэ
 export const dynamic = 'force-dynamic';
 
 export default async function EditorialBoard() {
@@ -12,7 +11,7 @@ export default async function EditorialBoard() {
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-black py-12">
       <div className="container mx-auto px-6 max-w-7xl">
-        <h1 className="text-4xl md:text-5xl font-bold text-center text-slate-900 dark:text-slate-100 mb-12">
+        <h1 className="text-2xl md:text-3xl font-bold text-[#003d71] mb-6 text-center">
           Сэтгүүлийн Зөвлөл
         </h1>
 
@@ -24,7 +23,8 @@ export default async function EditorialBoard() {
                   <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-blue-500">
                     <Image
                       src={member.photo}
-                      alt={`${member.name} ${member.surname}`}
+                      // Эндээс ${member.surname}-ийг хассан
+                      alt={member.name} 
                       fill
                       unoptimized
                       className="object-cover"
@@ -32,7 +32,8 @@ export default async function EditorialBoard() {
                   </div>
                 )}
                 <h3 className="text-xl font-bold text-center text-slate-900 dark:text-slate-100">
-                  {member.name} {member.surname}
+                  {/* Эндээс {member.surname}-ийг хассан */}
+                  {member.name}
                 </h3>
                 <p className="text-center text-blue-600 dark:text-blue-400 font-medium">{member.position}</p>
                 <p className="text-center text-slate-500 dark:text-slate-400 text-sm mt-2">{member.affiliation}</p>

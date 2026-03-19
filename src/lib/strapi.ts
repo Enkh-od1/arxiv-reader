@@ -1,315 +1,142 @@
-const STRAPI_URL = 'http://jpa.naog.edu.mn:1337'; 
+const STRAPI_URL = 'http://jpa.naog.edu.mn:1337';
 
-
-// Strapi-ээс ирэх raw item-ийн type (nested structure-тэй)
-interface StrapiRawArticle {
+// --- Интерфэйсүүдийг export хийх ---
+export interface EditorialMember {
   id: number;
-  attributes: {
-    title?: string;
-    summary?: string;
-    pdfUrl?: string;
-    releaseDate?: string;
-    authors?: string;
-    coverImage?: {
-      data?: {
-        attributes?: {
-          url: string;
-        };
-      };
-    };
-    category?: {
-      data?: {
-        attributes?: {
-          name: string;
-        };
-      };
-    };
-    volume?: string;
-    issue?: string;
-    country?: string;
-  };
-}
-
-
-// lib/strapi.ts эсвэл types/archive.ts файлд нэм (эсвэл байгаа бол өргөтгө)
-interface ArchiveItem {
-  id: number;
-  attributes: {
-    title: string;
-    subtitle?: string;
-    year?: number;
-    seasonOrNo?: string;
-    publishedDate: string;
-    cover?: {
-      data?: {
-        attributes: {
-          url: string;
-        };
-      };
-    };
-    pdf?: {
-      data?: {
-        attributes: {
-          url: string;
-        };
-      };
-    };
-  };
-}
-
-// Нийтлэлийн төрлийг тодорхойлох
-
-// lib/strapi.ts
-
-export interface Niitlel {
-  id: number;
-  attributes: {
-    Title: string;
-    Year: number;
-    Author: string;
-    Summary: string;
-    Views?: number;
-    Downloads?: number;
-    Cover?: { data?: { attributes?: { url: string } } };
-    PDF_File?: { data?: { attributes?: { url: string } } };
-  };
-}
-
-
-
-// Next.js-д ашиглах type
-export interface Article {
-  id: number;
-  title: string;
-  summary: string;
-  pdfUrl: string;
-  published: string;
-  authors: string;
-  coverImage: string | null;
-  category: string;
-  volume?: string;
-  issue?: string;
-  country?: string;
-}
-
-interface StrapiRawEditorial {
-  id: number;
-  attributes: {
-    name?: string;
-    surname?: string;
-    position?: string;
-    affiliation?: string;
-    bio?: string;
-    order?: number;
-    photo?: {
-      data?: {
-        attributes?: {
-          url: string;
-        };
-      };
-    };
-  };
-}
-
-// Мэдээллийн хэсгийн төрөл
-interface StrapiSection {
-  sectionTitle: string;
-  sectionDescription?: string;
-  sectionLogo?: {
-    data?: {
-      attributes?: {
-        url: string;
-      };
-    };
-  };
-}
-
-interface StrapiPartner {
-  partnerName: string;
-  partnerUrl?: string;
-  partnerLogo?: {
-    data?: {
-      attributes?: {
-        url: string;
-      };
-    };
-  };
-}
-
-export interface JournalInfo {
-  journalName?: string;
-  journalLogoUrl?: string;
-  focusAndScope?: string;
-  issn?: string;
-  eissn?: string;
-  aboutText?: string;
-  partners: Partner[];
-  informationSections: InfoSection[];
+  name: string;
+  position: string;
+  affiliation: string;
+  photo: string | null;
+  bio?: string;
+  order?: number;
 }
 
 export interface Partner {
   partnerName: string;
-  partnerLogo?: string;
   partnerUrl?: string;
+  partnerLogo?: StrapiMedia; // Media өгөгдөл
 }
 
-export interface InfoSection {
+export interface InformationSection {
   sectionTitle: string;
   sectionDescription?: string;
-  sectionLogo?: string;
+  sectionLogo?: StrapiMedia;
 }
 
-export interface EditorialMember{
+interface JournalAttributes {
+  focusAndScope?: string;
+  partners?: Partner[];
+  informationSections?: InformationSection[];
+}
+
+export interface Article {
   id: number;
-  name: string;
-  surname: string;
-  position: string;
-  affiliation: string;
-  bio: string;
-  photo: string | null;
-  order?: number;
+  documentId: string;
+  title: string;
+  authors: string;
+  summary: string;
+  pageCount: string;
+  pdfUrl: string | null;
+  Views: number;
+  views: number;
 }
 
-
-
-export async function getArticles(): Promise<Article[]> {
-  try {
-    const res = await fetch('http://jpa.naog.edu.mn:1337/api/articles?populate=*&sort=releaseDate:desc&pagination[limit]=10', {
-  cache: 'no-store',
-});
-
-    if (!res.ok) {
-      console.error('Articles fetch failed:', res.status);
-      return [];
-    }
-
-    const json = await res.json();
-
-    return json.data.map((item: StrapiRawArticle) => {
-      const attr = item.attributes || {};
-
-      return {
-        id: item.id,
-        title: attr.title || 'Гарчиггүй',
-        summary: attr.summary || 'Танилцуулга байхгүй',
-        pdfUrl: attr.pdfUrl || '#',
-        published: attr.releaseDate || new Date().toISOString(),
-        authors: attr.authors || 'Зохиогч тодорхойгүй',
-        coverImage: attr.coverImage?.data?.attributes?.url
-          ? `${STRAPI_URL}${attr.coverImage.data.attributes.url}`
-          : null,
-        category: attr.category?.data?.attributes?.name || 'Бүгд',
-        volume: attr.volume || 'Тодорхойгүй',
-        issue: attr.issue || 'Тодорхойгүй',
-        country: attr.country || 'Тодорхойгүй',
-      };
-    });
-  } catch (error) {
-    console.error('Articles fetch error:', error);
-    return [];
-  }
+interface StrapiResponseItem {
+  id: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  attributes: any; 
+  documentId?: string;
 }
 
-// Editorial members-г татах функц (шаардлагатай бол ашигла)
-export async function getEditorialMembers(): Promise<EditorialMember[]> {
-  try {
-    const res = await fetch(
-      `${STRAPI_URL}/api/editorial-members?populate=photo&sort=order:asc`,
-      { cache: 'no-store' }
-    );
-
-    if (!res.ok) return [];
-
-    const json = await res.json();
-
-    return json.data.map((item: StrapiRawEditorial) => {
-  const attr = item.attributes || {};
-
-  return {
-    id: item.id,
-    name: attr.name || '',
-    surname: attr.surname || '',
-    position: attr.position || 'Албан тушаал байхгүй',
-    affiliation: attr.affiliation || 'Харьяалал байхгүй',
-    bio: attr.bio || '',
-    photo: attr.photo?.data?.attributes?.url
-      ? `${STRAPI_URL}${attr.photo.data.attributes.url}`
-      : null,
-    order: attr.order || 999,
-  };
-});
-  } catch (error) {
-    console.error('Editorial members fetch error:', error);
-    return [];
-  }
+export interface Issue {
+  id: number;
+  documentId: string;
+  title: string;
+  year: number;
+  number: string;
+  coverUrl: string | null;
+  articles?: Article[];
 }
 
-export async function getArticleById(id: string): Promise<Article | null> {
-  try {
-    const res = await fetch(
-      `${STRAPI_URL}/api/articles/${id}?populate=*`,
-      { cache: 'no-store' }
-    );
+// Strapi-аас ирдэг түүхий өгөгдлийн бүтэц
+interface StrapiRawItem {
+  id: number;
+  documentId: string;
+  attributes?: StrapiAttributes;
+}
 
-    if (!res.ok) return null;
-
-    const json = await res.json();
-    const attr = json.data.attributes || {};
-
-    return {
-      id: json.data.id,
-      title: attr.title || 'Гарчиггүй',
-      summary: attr.summary || 'Танилцуулга байхгүй',
-      pdfUrl: attr.pdfUrl || '#',
-      published: attr.releaseDate || new Date().toISOString(),
-      authors: attr.authors || 'Зохиогч тодорхойгүй',
-      coverImage: attr.coverImage?.data?.attributes?.url
-        ? `${STRAPI_URL}${attr.coverImage.data.attributes.url}`
-        : null,
-        category: attr.category?.data?.attributes?.name || 'Тодорхойгүй',
-        country: attr.country || 'Тодорхойгүй',
-      // улс нэмэх бол attr.country эсвэл affiliation ашиглаж болно
+interface StrapiMedia {
+  data?: {
+    attributes?: {
+      url: string;
     };
-  } catch (error) {
-    console.error('Article fetch error:', error);
-    return null;
-  }
+  };
+  url?: string;
 }
 
+interface StrapiAttributes {
+  Title?: string;
+  title?: string;
+  Authors?: string;
+  authors?: string;
+  Summary?: string;
+  summary?: string;
+  PageCount?: string;
+  pages?: string;
+  Views?: number;
+  views?: number;
+  pdfUrl?: string; // Энийг заавал нэмээрэй
+  PDF?: {
+    data?: {
+      attributes?: {
+        url: string;
+      };
+    };
+  };
+  niitleluud?: {
+    data: StrapiRawItem[];
+  };
+}
+
+
+
+
+const getFullUrl = (url: string | undefined | null) => {
+  if (!url) return null;
+  return url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
+};
+
+// --- Функцуудыг export хийх ---
+
+// 1. Сэтгүүлийн мэдээлэл (About хуудсанд)
 export async function getJournalInfo() {
   try {
-    // ?populate=* гэхийн оронд бүх түвшний зургийг авахын тулд илүү нарийн populate бичсэн
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/journal-infos?populate[informationSections][populate]=*&populate[partners][populate]=*`,
-      { cache: 'no-store' }
-    );
-
-    if (!res.ok) return null;
-
-    const json = await res.json();
+    // 1. 'partners' болон түүний доторх 'partnerLogo'-г гүн рүү нь populate хийнэ
+    const query = 'populate[partners][populate][partnerLogo]=*&populate[informationSections][populate][sectionLogo]=*';
     
-    // Эхний датаг авах
-    const data = json.data?.[0]?.attributes;
+    const res = await fetch(`${STRAPI_URL}/api/journal-infos?${query}`, { 
+      cache: 'no-store' 
+    });
+    
+    const json = await res.json();
+    const data = json.data?.[0];
+
     if (!data) return null;
 
-    return {
-      focusAndScope: data.focusAndScope || '',
-      
-      // Information хэсгийг цэгцлэх
-      informationSections: data.informationSections?.map((section: StrapiSection) => ({
-        sectionTitle: section.sectionTitle,
-        sectionDescription: section.sectionDescription,
-        // Зургийн URL-ийг Strapi-ийн гүн бүтэц дотроос зөв ухаж гаргах
-        sectionLogo: section.sectionLogo?.data?.attributes?.url || null,
-      })) || [],
+    // 2. Өгөгдлийг цэвэрхэн болгож хувиргах (Mapping)
+    const attr = data.attributes || data;
 
-      // Partners хэсгийг цэгцлэх
-      partners: data.partners?.map((partner: StrapiPartner) => ({
-        partnerName: partner.partnerName,
-        partnerUrl: partner.partnerUrl || '#',
-        // Зургийн URL-ийг Strapi-ийн гүн бүтэц дотроос зөв ухаж гаргах
-        partnerLogo: partner.partnerLogo?.data?.attributes?.url || null,
+    return {
+      ...attr,
+      partners: attr.partners?.map((p: Partner) => ({
+        ...p,
+        // Зургийн URL-ийг зөв салгаж авах хэсэг
+        partnerLogo: p.partnerLogo?.data?.attributes?.url || p.partnerLogo?.url || null
       })) || [],
+      informationSections: attr.informationSections?.map((s: InformationSection) => ({
+        ...s,
+        sectionLogo: s.sectionLogo?.data?.attributes?.url || s.sectionLogo?.url || null
+      })) || []
     };
   } catch (error) {
     console.error("getJournalInfo error:", error);
@@ -318,41 +145,202 @@ export async function getJournalInfo() {
 }
 
 
-
-
-
-// lib/strapi.ts
-// lib/strapi.ts доторх getLatestArticle функц:
-
-// lib/strapi.ts доторх getLatestArticle функц
-
+// 2. Сүүлийн нийтлэл (Home хуудсанд)
 export async function getLatestArticle() {
-  const STRAPI_URL = 'http://jpa.naog.edu.mn:1337'; 
-  
   try {
     const res = await fetch(`${STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc&pagination[limit]=1`, { cache: 'no-store' });
+    const json = await res.json();
+    return json.data?.[0] || null;
+  } catch {
+    return null;
+  }
+}
+
+// 3. Нийтлэлийг ID-аар авах
+export async function getArticleById(id: string) {
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/articles/${id}?populate=*`, { cache: 'no-store' });
+    const json = await res.json();
+    return json.data || null;
+  } catch {
+  return null;
+}
+}
+
+// 4. Зөвлөлийн гишүүд
+export async function getEditorialMembers() {
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/editorial-members?populate=*&sort=order:asc`, { 
+      cache: 'no-store' 
+    });
+    const json = await res.json();
+    
+    // Энд (item: any) биш (item: StrapiResponseItem) гэж бичвэл Ln 57-ын алдаа арилна
+    return json.data.map((item: StrapiResponseItem) => ({
+      id: item.id,
+      name: item.attributes?.name || '',
+      position: item.attributes?.position || '',
+      affiliation: item.attributes?.affiliation || '',
+      photo: item.attributes?.photo?.data?.attributes?.url 
+        ? `${STRAPI_URL}${item.attributes.photo.data.attributes.url}` 
+        : null,
+    }));
+  } catch (error) { // Ln 31, 40, 49, 66-ын алдааг засахын тулд error-оо ашиглана
+    console.error("Editorial fetch error:", error);
+    return [];
+  }
+}
+
+// src/lib/strapi.ts
+
+export async function getIssues(): Promise<Issue[]> {
+  try {
+    // Талбарын нэр Том үсгээр байгаа тул populate хийхэд Cover-ийг том үсгээр бичнэ
+    const res = await fetch(`${STRAPI_URL}/api/issues?populate[Cover]=*&sort=Year:desc`, { 
+      cache: 'no-store' 
+    });
+    
+    if (!res.ok) return [];
+
+    const json = await res.json();
+    if (!json.data) return [];
+
+    return json.data.map((item: StrapiRawItem) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const attr = (item.attributes || item) as any;
+
+      return {
+        id: item.id,
+        documentId: item.documentId || item.id?.toString(),
+        title: attr.Title || attr.title || "Гарчиггүй", // Том Title-ийг түрүүлж авна
+        year: Number(attr.Year || attr.year || 0),
+        number: attr.Number || attr.number || "0",
+        coverUrl: getFullUrl(
+          attr.Cover?.data?.attributes?.url || 
+          attr.Cover?.url ||
+          attr.cover?.data?.attributes?.url
+        ),
+      };
+    });
+  } catch (error) {
+    console.error("getIssues error:", error);
+    return [];
+  }
+}
+
+
+// src/lib/strapi.ts
+
+// getIssueById функц доторх fetch хаяг болон mapping хэсэг:
+
+export async function getIssueById(id: string): Promise<Issue | null> {
+  try {
+    // 1. Populate хийхдээ 'articles' болон 'PDF' талбарыг заавал оруулна
+    const query = `populate[Cover]=*&populate[niitleluud][populate][PDF]=*&populate[niitleluud][sort]=Order:asc`;
+    
+    const res = await fetch(`${STRAPI_URL}/api/issues/${id}?${query}`, { cache: 'no-store' });
+    
+    if (!res.ok) return null;
+    const json = await res.json();
+    
+    // ЭНЭ МӨРИЙГ НЭМЭЭД ТЕРМИНАЛАА ХАРААРАЙ - Өгөгдөл ирж байгаа эсэхийг шалгана
+    console.log("DEBUG - Issue Data:", JSON.stringify(json.data, null, 2));
+
+    const data = json.data;
+    if (!data) return null;
+
+    const attr = data.attributes || data;
+
+    return {
+      id: data.id,
+      documentId: data.documentId || data.id?.toString(),
+      title: attr.Title || attr.title || "Гарчиггүй",
+      year: attr.Year || 0,
+      number: attr.Number || "0",
+      coverUrl: getFullUrl(attr.Cover?.data?.attributes?.url || attr.Cover?.url),
+      
+      // Өгүүллүүдийг илүү найдвартай унших хэсэг
+      // src/lib/strapi.ts доторх хэсэг
+
+// StrapiRawItem-ийг any болгож солино
+// getIssueById функц доторх articles.map хэсэгт:
+
+articles: (attr.niitleluud?.data || attr.niitleluud || []).map((art: StrapiRawItem) => {
+  // Энд (art as any) гэж хүчээр зааж өгснөөр улаан зураас арилна
+  const a = (art.attributes || art) as StrapiAttributes;
+
+  return {
+    id: art.id,
+    documentId: art.documentId || art.id?.toString(),
+    title: a.Title || a.title || "Гарчиггүй",
+    authors: a.Authors || a.authors || "Зохиогч тодорхойгүй",
+    summary: a.Summary || a.summary || "Хураангуй байхгүй",
+    pageCount: a.PageCount || a.pages || "—",
+    views: Number(a.Views || a.views || 0),
+    pdfUrl: a.pdfUrl || a.PDF?.data?.attributes?.url || null,
+  };
+}),
+
+
+
+
+
+    };
+  } catch (error) {
+    console.error("getIssueById error:", error);
+    return null;
+  }
+}
+
+// src/lib/strapi.ts
+
+export async function updateArticleViews(documentId: string, currentViews: number) {
+  try {
+    const url = `${STRAPI_URL}/api/articles/${documentId}`;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        data: { 
+          Views: currentViews + 1 // Энд заавал том 'Views' байх ёстой
+        } 
+      }),
+    });
+    return res.ok;
+  } catch (error) {
+    console.error("Update error:", error);
+    return false;
+  }
+}
+
+
+// 5. Хамгийн сүүлийн дугаарыг (Issue) авах
+export async function getLatestIssue(): Promise<Issue | null> {
+  try {
+    // Year болон Number-ээр нь эрэмбэлж, хамгийн эхний 1-ийг авна
+    const query = `populate[Cover]=*&sort[0]=Year:desc&sort[1]=Number:desc&pagination[limit]=1`;
+    const res = await fetch(`${STRAPI_URL}/api/issues?${query}`, { 
+      cache: 'no-store' 
+    });
+    
+    if (!res.ok) return null;
     const json = await res.json();
     
     if (!json.data || json.data.length === 0) return null;
 
     const item = json.data[0];
-    const attr = item.attributes;
+    const attr = item.attributes || item;
 
     return {
       id: item.id,
-      title: attr.title || attr.Title || 'Гарчиггүй',
-      summary: attr.summary || attr.Summary || 'Танилцуулга байхгүй',
-      views: attr.views ?? attr.Views ?? 0,
-      downloads: attr.downloads ?? attr.Downloads ?? 0,
-      
-      // Таны Strapi дээрх PDF_File нэршлийг яг ижилхэн болгож засав
-      pdfUrl: attr.PDF_File?.data?.attributes?.url || null,
-      
-      // Cover-ийг мөн ижил логикоор шалгах
-      coverImage: attr.Cover?.data?.attributes?.url || attr.cover?.data?.attributes?.url || null,
+      documentId: item.documentId || item.id?.toString(),
+      title: attr.Title || attr.title || "Гарчиггүй",
+      year: attr.Year || attr.year || 0,
+      number: attr.Number || attr.number || "0",
+      coverUrl: getFullUrl(attr.Cover?.data?.attributes?.url || attr.Cover?.url),
     };
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error("getLatestIssue error:", error);
     return null;
   }
 }
@@ -361,86 +349,9 @@ export async function getLatestArticle() {
 
 
 
-export async function getArchives() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/archives?populate=*&sort=publishedDate:desc`,
-      { cache: 'no-store' }
-    );
-
-    if (!res.ok) {
-      console.error('Archives fetch failed:', res.status);
-      return [];
-    }
-
-    const json = await res.json();
-
-    return json.data.map((item: ArchiveItem) => ({
-      id: item.id,
-      title: item.attributes.title,
-      subtitle: item.attributes.subtitle || '',
-      year: item.attributes.year || new Date(item.attributes.publishedDate || "").getFullYear(),
-      seasonOrNo: item.attributes.seasonOrNo || '', // эсвэл subtitle-аас авч болно
-      coverImage: item.attributes.cover?.data?.attributes?.url
-        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${item.attributes.cover.data.attributes.url}`
-        : null,
-      pdfUrl: item.attributes.pdf?.data?.attributes?.url
-        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${item.attributes.pdf.data.attributes.url}`
-        : null,
-    }));
-  } catch (error) {
-    console.error('getArchives error:', error);
-    return [];
-  }
-}
-
-// lib/strapi.ts
-
-export async function updateArticleStats(id: number, type: 'views', currentCount: number) {
-  try {
-    const res = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        data: {
-          [type]: (currentCount || 0) + 1, // Одоо байгаа тоон дээр 1-ийг нэмнэ
-        },
-      }),
-    });
-
-    if (!res.ok) throw new Error('Статистик шинэчлэхэд алдаа гарлаа');
-    return true;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-}
-
-// lib/strapi.ts
-// lib/strapi.ts
-// lib/strapi.ts
-// lib/strapi.ts
-export async function updateArticleViews(id: number, currentViews: number) {
-  const STRAPI_URL = 'http://jpa.naog.edu.mn:1337';
-  try {
-    const res = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        data: {
-          Views: Number(currentViews || 0) + 1, // Strapi дээр томоор бол Views
-        },
-      }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
 
 
+// src/app/archive/page.tsx (эсвэл таны lib/strapi.ts доторх функц)
 
 
 
