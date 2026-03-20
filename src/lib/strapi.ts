@@ -11,6 +11,36 @@ export interface EditorialMember {
   order?: number;
 }
 
+interface StrapiIssue {
+  id: number;
+  documentId?: string;
+  attributes?: {
+    Title?: string;
+    Year?: string | number;
+    Number?: string;
+    Cover?: {
+      url?: string;
+      data?: {
+        attributes?: {
+          url: string;
+        };
+      };
+    };
+  };
+  // v5 болон flat бүтцийг мөн Cover дотор нь нэгтгэж өгсөн
+  Title?: string;
+  Year?: string | number;
+  Number?: string;
+  Cover?: {
+    url?: string;
+    data?: {
+      attributes?: {
+        url: string;
+      };
+    };
+  };
+}
+
 export interface Partner {
   partnerName: string;
   partnerUrl?: string;
@@ -189,40 +219,48 @@ export async function getEditorialMembers() {
 
 // src/lib/strapi.ts
 
-export async function getIssues(): Promise<Issue[]> {
+// src/lib/strapi.ts
+
+// src/lib/strapi.ts
+
+// src/lib/strapi.ts
+
+export async function getIssues(page: number = 1, pageSize: number = 12) {
   try {
-    // Талбарын нэр Том үсгээр байгаа тул populate хийхэд Cover-ийг том үсгээр бичнэ
-    const res = await fetch(`${STRAPI_URL}/api/issues?populate[Cover]=*&sort=Year:desc`, { 
-      cache: 'no-store' 
-    });
+    const query = `pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate[Cover]=*&sort=Year:desc&sort=Number:desc`;
+    const res = await fetch(`${STRAPI_URL}/api/issues?${query}`, { cache: 'no-store' });
     
-    if (!res.ok) return [];
+    if (!res.ok) return { issues: [], pagination: null };
 
     const json = await res.json();
-    if (!json.data) return [];
 
-    return json.data.map((item: StrapiRawItem) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const attr = (item.attributes || item) as any;
+    // 'item: any' биш, доорх байдлаар бичвэл алдаа арилна
+    const issues = json.data.map((item: StrapiIssue) => {
+  const attr = item.attributes || item; 
 
-      return {
-        id: item.id,
-        documentId: item.documentId || item.id?.toString(),
-        title: attr.Title || attr.title || "Гарчиггүй", // Том Title-ийг түрүүлж авна
-        year: Number(attr.Year || attr.year || 0),
-        number: attr.Number || attr.number || "0",
-        coverUrl: getFullUrl(
-          attr.Cover?.data?.attributes?.url || 
-          attr.Cover?.url ||
-          attr.cover?.data?.attributes?.url
-        ),
-      };
-    });
+  return {
+    id: item.id,
+    documentId: item.documentId || item.id?.toString(),
+    title: attr.Title || "Гарчиггүй",
+    year: Number(attr.Year || 0),
+    number: attr.Number || "0",
+    // ЭНД getFullUrl() ашиглан хаягийг бүтэн (http://jpa.naog.edu.mn...) болгоно
+    coverUrl: getFullUrl(attr.Cover?.url || attr.Cover?.data?.attributes?.url),
+  };
+});
+
+    return { 
+      issues, 
+      pagination: json.meta.pagination 
+    };
   } catch (error) {
     console.error("getIssues error:", error);
-    return [];
+    return { issues: [], pagination: null };
   }
 }
+
+
+
 
 
 // src/lib/strapi.ts
@@ -348,6 +386,46 @@ export async function getLatestIssue(): Promise<Issue | null> {
 
 
 // src/app/archive/page.tsx (эсвэл таны lib/strapi.ts доторх функц)
+
+export async function getAuthorsInfo() {
+  try {
+    // Strapi дээр 'authors-info' нэртэй Single Type үүсгэсэн гэж үзвэл:
+    const res = await fetch(`${STRAPI_URL}/api/authors-info?populate=*`, { 
+      cache: 'no-store' 
+    });
+    const json = await res.json();
+    return json.data?.attributes || json.data || null;
+  } catch (error) {
+    console.error("getAuthorsInfo error:", error);
+    return null;
+  }
+}
+
+export async function getInformationPage() {
+  try {
+    // Collection Type учраас 'information-pages' (олон тоон дээр) гэж дуудна
+    const res = await fetch(`${STRAPI_URL}/api/information-pages?populate=*`, { 
+      cache: 'no-store' 
+    });
+
+    if (!res.ok) {
+      console.error("Strapi fetch failed:", res.status, res.statusText);
+      return null;
+    }
+
+    const json = await res.json();
+    
+    // Collection Type учраас өгөгдөл нь жагсаалт (Array) дотор ирнэ. 
+    // Тиймээс эхний элементийг (index 0) салгаж авна.
+    const item = json.data?.[0]; 
+    return item?.attributes || item || null;
+    
+  } catch (error) {
+    console.error("getInformationPage error:", error);
+    return null;
+  }
+}
+
 
 
 
