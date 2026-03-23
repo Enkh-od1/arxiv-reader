@@ -31,7 +31,7 @@ export default function ArticleContent({ article }: ArticleProps) {
       <div className="flex border-b mb-8 overflow-x-auto">
         <button onClick={() => setActiveTab('summary')} className={`px-6 py-4 font-bold ${activeTab === 'summary' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-slate-400'}`}>Хураангуй</button>
         <button onClick={() => setActiveTab('author')} className={`px-6 py-4 font-bold ${activeTab === 'author' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-slate-400'}`}>Зохиогчийн тухай</button>
-        <button onClick={() => setActiveTab('works')} className={`px-6 py-4 font-bold ${activeTab === 'works' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-slate-400'}`}>Бүтээлийн жагсаалт</button>
+        <button onClick={() => setActiveTab('works')} className={`px-6 py-4 font-bold ${activeTab === 'works' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-slate-400'}`}>Эх сурвалжийн жагсаалт</button>
       </div>
 
       <div className="min-h-300px">
