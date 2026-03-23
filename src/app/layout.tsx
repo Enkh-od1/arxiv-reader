@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'arXiv Explorer',
+  title: 'Төрийн удирдлага',
   description: 'Монгол arXiv өгүүлэл хайгч',
 };
 

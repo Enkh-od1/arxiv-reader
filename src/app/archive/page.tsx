@@ -10,7 +10,7 @@ export default async function ArchivePage({
 }) {
   const params = await searchParams;
   const currentPage = Number(params.page) || 1;
-  const { issues, pagination } = await getIssues(currentPage, 20); // Илүү олон сэтгүүл харуулахын тулд 20 болгов
+  const { issues, pagination } = await getIssues(currentPage, 19); // Илүү олон сэтгүүл харуулахын тулд 20 болгов
 
   // --- ОН ОНООР НЬ БҮЛЭГЛЭХ ЛОГИК ---
   const groupedIssues = issues.reduce((acc: Record<number, Issue[]>, issue: Issue) => {
@@ -27,7 +27,7 @@ export default async function ArchivePage({
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
-      <h1 className="text-3xl font-bold mb-10 border-l-4 border-[#003d71] pl-4">Сэтгүүлийн архив</h1>
+      <h1 className="text-3xl font-bold mb-10 border-l-4 border-[#003d71] text-[#003d71] pl-4">Сэтгүүлийн архив</h1>
       
       {/* Сэтгүүлүүдийн жагсаалт (Он оноор) */}
       {years.map((year) => (

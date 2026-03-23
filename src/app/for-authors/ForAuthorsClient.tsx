@@ -15,7 +15,7 @@ export default function ForAuthorsClient({ initialData }: { initialData: { attri
 
   const tabs = [
     { id: 1, name: 'Тавигдах шаардлага', field: 'requirements' as const, title: 'Тавигдах шаардлага' },
-    { id: 2, name: 'Ёс зүйн хэм хэмжээ', field: 'ethics' as const, title: 'Ёс зүйн хэм хэмжээ, зарчим' },
+    { id: 2, name: 'Ёс зүйн хэм хэмжээ', field: 'ethics' as const, title: 'Ёс зүйн хэм хэмжээ' },
     { id: 3, name: 'Хянан магадлагаа', field: 'review' as const, title: 'Хөндлөнгийн хянан магадлагаа' },
   ];
 
@@ -72,32 +72,34 @@ export default function ForAuthorsClient({ initialData }: { initialData: { attri
           
           {/* --- ЭНЭ ХЭСГИЙГ ШИНЭЧЛЭВ --- */}
           <div className="prose prose-slate max-w-none dark:prose-invert 
-                /* Хүснэгтийн хүрээ болон загвар */
-                prose-table:border prose-table:border-collapse prose-table:w-full
-                prose-th:border prose-th:border-slate-300 prose-th:p-3 prose-th:bg-gray-100
-                prose-td:border prose-td:border-slate-300 prose-td:p-3
-                text-justify">
-            {formattedContent ? (
-              <ReactMarkdown
-  components={{
-    // h3 гарчгийг голлуулж, өнгийг нь тохируулах
-    // 'node'-ийг огт бичихгүй орхивол ESLint алдаа гарахгүй
-    h3: ({ ...props }) => (
-      <h3 
-        className="text-center text-lg md:text-xl font-bold text-[#003d71] my-8 uppercase" 
-        {...props} 
-      />
-    ),
-  }}
-  // 'remarkPlugins=' гэдгийг зөвхөн нэг удаа бичнэ
-  remarkPlugins={[remarkGfm]}
->
-  {formattedContent}
-</ReactMarkdown>
-            ) : (
-              <p className="text-gray-400 italic text-center py-10">Мэдээлэл оруулаагүй байна...</p>
-            )}
-          </div>
+      text-justify 
+      /* Мөр хоорондын зайг багасгах (1.5-аас 1.4 эсвэл 1.25 болгох) */
+      leading-tight 
+      /* Догол мөр (1, 2, 3...) болон жагсаалт хоорондын зайг маш бага болгох */
+      prose-p:my-1 
+      prose-li:my-0.5
+      prose-strong:text-[#003d71]
+      /* Хүснэгтийн загвар хэвээрээ байна */
+      prose-table:border prose-table:border-collapse prose-table:w-full
+      prose-th:border prose-th:border-slate-300 prose-th:p-2 prose-th:bg-gray-100
+      prose-td:border prose-td:border-slate-300 prose-td:p-2">
+  {formattedContent ? (
+    <ReactMarkdown
+      components={{
+        h3: ({ ...props }) => (
+          /* Гарчгийн дээд доод зайг мөн багасгав */
+          <h3 className="text-center text-lg md:text-xl font-bold text-[#003d71] mt-6 mb-4 uppercase" {...props} />
+        ),
+      }}
+      remarkPlugins={[remarkGfm]}
+    >
+      {formattedContent}
+    </ReactMarkdown>
+  ) : (
+    <p className="text-gray-400 italic text-center py-10">Мэдээлэл оруулаагүй байна...</p>
+  )}
+</div>
+
         </div>
       </div>
     </div>

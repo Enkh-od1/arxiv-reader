@@ -25,7 +25,7 @@ export default function ContactPage() {
                 Байгууллагын хаяг
               </h2>
               <p className="mb-4">
-                Email: <Link href="mailto:info@arxiv-explorer.mn" className="text-blue-600 dark:text-blue-400 hover:underline">researchcenter@naog.gov.mn</Link>
+                Email: <Link href="mailto:info@arxiv-explorer.mn" className="text-blue-600 dark:text-blue-400 hover:underline">jpa@naog.gov.mn</Link>
               </p>
               <p className="mb-4">
                 Утас: +70133043
@@ -38,11 +38,7 @@ export default function ContactPage() {
             
           </div>
 
-          <div className="my-12 p-8 bg-blue-50 dark:bg-blue-900/30 rounded-2xl border border-blue-200 dark:border-blue-800 text-center">
-            <p className="text-lg font-medium text-blue-800 dark:text-blue-300">
-  &quot;Таны санал хүсэлт бидний хөгжлийн түлхүүр&quot; – arXiv Explorer баг
-</p>
-          </div>
+        
         </div>
       </div>
     </div>

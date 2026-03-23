@@ -426,6 +426,29 @@ export async function getInformationPage() {
   }
 }
 
+// lib/strapi.ts
+// lib/strapi.ts
+// lib/strapi.ts
+export async function getArticleByDocumentId(id: string) {
+  // URL байгаа эсэхийг шалгах, байхгүй бол шууд localhost ашиглах
+  const baseUrl = process.env.STRAPI_API_URL || 'http://jpa.naog.edu.mn:1337';
+  
+  const res = await fetch(
+    `${baseUrl}/api/articles/${id}?populate=*`, 
+    { cache: 'no-store' }
+  );
+
+  if (!res.ok) return null;
+  const json = await res.json();
+  return json.data;
+}
+
+
+
+
+
+
+
 
 
 

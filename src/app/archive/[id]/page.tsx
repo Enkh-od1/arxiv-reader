@@ -3,6 +3,7 @@ import PdfButton from '@/components/PdfButton';
 import ExpandableSummary from '@/components/ExpandableSummary';
 import { FileText, Eye } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default async function IssueDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -43,12 +44,14 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
           <div key={article.id} className="group border-b border-slate-100 pb-10 last:border-0 transition-all">
             
             {/* А. Өгүүллийн гарчиг */}
-            <h3 className="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-blue-700 transition-colors">
-              {article.title}
-            </h3>
+            <Link href={`/articles/${article.documentId}`}>
+      <h3 className="text-xl font-bold text-slate-900 mb-3 cursor-pointer hover:text-blue-700 transition-colors">
+        {article.title}
+      </h3>
+    </Link>
             
             {/* Б. Зохиогч (Италик, саарал) */}
-            <p className="text-[15px] text-slate-500 mb-4 italic font-medium">
+            <p className="text-[15px] text-slate-500 mb-4 font-medium">
               {article.authors}
             </p>
 

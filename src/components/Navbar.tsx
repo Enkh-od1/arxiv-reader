@@ -41,6 +41,7 @@ export default function Navbar() {
             <li><Link href="/editorial" className="hover:text-blue-200 transition">Сэтгүүлийн зөвлөл</Link></li>
             <li><Link href="/archive" className="hover:text-blue-200 transition">Архив</Link></li>
             <li><Link href="/for-authors" className="hover:text-blue-200 transition">Зохиогчдод</Link></li>
+            <li><Link href="/contact" className="hover:text-blue-200 transition">Холбоо барих</Link></li>
           </ul>
 
           <div className="flex items-center gap-4">
@@ -62,7 +63,7 @@ export default function Navbar() {
             <li><Link href="/about" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Нийтлэлийн бодлого</Link></li>
             <li><Link href="/editorial" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Сэтгүүлийн зөвлөл</Link></li>
             <li><Link href="/archive" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Архив</Link></li>
-            <li><Link href="/submit-article" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Хүсэлт илгээх</Link></li>
+            <li><Link href="/for-authors" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Зохиогчдод</Link></li>
             <li><Link href="/contact" className="block py-2 hover:text-blue-200 transition" onClick={() => setIsMenuOpen(false)}>Холбоо барих</Link></li>
           </ul>
         )}
