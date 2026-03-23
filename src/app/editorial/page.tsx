@@ -2,6 +2,8 @@
 import Image from 'next/image';
 import { getEditorialMembers } from '@/lib/strapi';
 import type { EditorialMember } from '@/lib/strapi';
+import ReactMarkdown from 'react-markdown';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -40,12 +42,15 @@ export default async function EditorialBoard() {
                 </h3>
 
                 {member.bio && (
-      <div className="w-full">
-        {/* text-xs: affiliation-тай ижил хэмжээ, text-center: голлуулах */}
-        <p className="text-center text-slate-500 dark:text-slate-400 text-sm mt-2">
-          {member.bio}
-        </p>
-      </div>
+      <div className="prose prose-slate max-w-none text-center
+                /* Эдгээр классуудыг заавал нэмээрэй */
+                prose-strong:font-bold 
+                prose-strong:text-slate-900">
+  <ReactMarkdown>
+    {member.bio}
+  </ReactMarkdown>
+</div>
+
     )}
 
                 <p className="text-center text-blue-600 dark:text-blue-400 font-medium">{member.position}</p>

@@ -16,7 +16,7 @@ export default function ForAuthorsClient({ initialData }: { initialData: { attri
   const tabs = [
     { id: 1, name: 'Тавигдах шаардлага', field: 'requirements' as const, title: 'Тавигдах шаардлага' },
     { id: 2, name: 'Ёс зүйн хэм хэмжээ', field: 'ethics' as const, title: 'Ёс зүйн хэм хэмжээ' },
-    { id: 3, name: 'Хянан магадлагаа', field: 'review' as const, title: 'Хөндлөнгийн хянан магадлагаа' },
+    { id: 3, name: 'Хянан магадалгаа', field: 'review' as const, title: 'Хөндлөнгийн хянан магадалгаа' },
   ];
 
   const currentTab = tabs.find(t => t.id === activeTab);
@@ -61,7 +61,7 @@ export default function ForAuthorsClient({ initialData }: { initialData: { attri
 
         {/* Content Area */}
         <div className="animate-fadeIn min-h-400px">
-          <h2 className="text-2xl md:text-3xl font-black text-[#003d71] mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#003d71] mb-6">
   {currentTab?.title}
 </h2>
           

@@ -25,13 +25,13 @@ export default function ContactPage() {
                 Байгууллагын хаяг
               </h2>
               <p className="mb-4">
-                Email: <Link href="mailto:info@arxiv-explorer.mn" className="text-blue-600 dark:text-blue-400 hover:underline">jpa@naog.gov.mn</Link>
+                Email: <Link href="mailto:info@arxiv-explorer.mn" className="text-blue-600 dark:text-blue-400 hover:underline">jpa@naog.edu.mn</Link>
               </p>
               <p className="mb-4">
                 Утас: +70133043
               </p>
               <p>
-                Хаяг: Улаанбаатар хот, Хан-Уул дүүрэг, 17-р хороо, Удирдлагын академи
+                Хаяг: Улаанбаатар хот, Хан-Уул дүүрэг, 17-р хороо, Удирдлагын академи, Б-байр , 201, 202 тоот
               </p>
             </div>
 

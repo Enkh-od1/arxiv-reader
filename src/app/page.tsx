@@ -2,6 +2,7 @@ import { getJournalInfo, getLatestIssue } from '@/lib/strapi';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Partner, InformationSection } from '@/types/journal';
+import ReactMarkdown from 'react-markdown';
 
 
 export const dynamic = 'force-dynamic';
@@ -27,13 +28,15 @@ export default async function Home() {
   <h2 className="text-2xl md:text-3xl font-bold text-[#003d71] mb-8 text-center">
     Сэтгүүлийн тухай
   </h2>
-  
-  {/* Текстийг Strapi редактор шиг paragraphs-ийг нь салгаж харуулах хэсэг */}
-  <div 
-  className="text-slate-700 leading-relaxed text-justify text-sm md:text-base 
-             whitespace-pre-line" // ЭНЭ КЛАССЫГ НЭМЭЭРЭЙ
-  dangerouslySetInnerHTML={{ __html: journal.focusAndScope || '' }} 
-/>
+
+  {/* Текстийг ReactMarkdown ашиглан харуулах хэсэг */}
+  <div className="text-slate-700 leading-relaxed text-justify text-sm md:text-base 
+                  prose prose-slate max-w-none 
+                  prose-strong:font-bold prose-strong:text-[#003d71]">
+    <ReactMarkdown>
+      {journal.focusAndScope || ''}
+    </ReactMarkdown>
+  </div>
 </section>
 
           {/* 2. Шинэ дугаар (Issue) - Хамгийн сүүлийн Архиваас */}
