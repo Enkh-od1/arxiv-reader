@@ -95,11 +95,11 @@ export default async function Home() {
             <div className="space-y-8 text-center">
               {/* 1. Мэдээлэл: Гар бичмэл хүлээн авах */}
     <div className="group">
-      <p className="text-gray-500 mt-2 text-sm">
+      <p className="text-slate-700 mt-2 text-sm">
         Төрийн удирдлага сэтгүүл 2026 оны эхний дугаартаа өгүүлэл авч байна. Та бүхнийг бүтээлээ ирүүлэхийг урья.
       </p>
-      <p className="text-gray-500 mt-2 text-sm leading-relaxed">
-        Цахим шуудан : turiinudirdlaga@naog.gov.mn
+      <p className="text-slate-700 mt-2 text-sm leading-relaxed">
+        Цахим шуудан : jpa@naog.edu.mn
       </p>
     </div>
               {(journal.informationSections?.length ?? 0) > 0 ? (

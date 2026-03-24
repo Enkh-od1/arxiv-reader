@@ -88,7 +88,8 @@ export default function ForAuthorsClient({ initialData }: { initialData: { attri
       components={{
         h3: ({ ...props }) => (
           /* Гарчиг хоорондын зайг мөн багасгав */
-          <h3 className="text-center text-lg md:text-xl font-bold text-[#003d71] mt-4 mb-2 uppercase" {...props} />
+          <h3 className="text-center text-lg md:text-xl font-bold text-[#003d71] mt-4 mb-2 uppercase"
+           {...props} />
         ),
         // Зураг харуулах логик хэвээрээ
         img: ({ src, alt }) => (
@@ -110,6 +111,7 @@ export default function ForAuthorsClient({ initialData }: { initialData: { attri
     </ReactMarkdown>
   ) : (
     <p className="text-gray-400 italic text-center py-10">Мэдээлэл оруулаагүй байна...</p>
+    
   )}
 </div>
 
