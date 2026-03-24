@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-export default function ForAuthorsClient() {
+// 1. Проп-ын төрлийг тодорхойлж өгнө
+export default function ForAuthorsClient() { 
   const [activeTab, setActiveTab] = useState(1);
 
   const tabs = [

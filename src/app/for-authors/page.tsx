@@ -1,7 +1,12 @@
-import ForAuthorsClient from './ForAuthorsClient';
-import { getInformationPage } from '@/lib/strapi';
+// page.tsx дотор
+import ForAuthorsClient from './ForAuthorsClient'; // Файлын байршил зөв эсэхийг шалгаарай
 
 export default async function Page() {
-  const data = await getInformationPage(); // Энд функцээ зөв дуудсан эсэх
-  return <ForAuthorsClient initialData={data} />;
+  // const data = await getInformationPage(); <-- Энэ хэрэггүй болсон
+
+  return (
+    <main>
+      <ForAuthorsClient />  {/* initialData={data} гэдгийг устгасан */}
+    </main>
+  );
 }
