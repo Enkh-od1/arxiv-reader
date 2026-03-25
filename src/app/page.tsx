@@ -68,7 +68,7 @@ export default async function Home() {
           {latestIssue.year} он
         </span>
         <h3 className="text-xl md:text-2xl font-extrabold text-[#003d71] mt-2 mb-4 leading-tight">
-          № {latestIssue.number} <br className="hidden md:block" /> ({latestIssue.title})
+          № {latestIssue.number} <br className="md:block" /> ({latestIssue.title})
         </h3>
         <Link 
           href={`/archive/${latestIssue.documentId}`}
@@ -101,6 +101,16 @@ export default async function Home() {
       <p className="text-slate-700 mt-2 text-sm leading-relaxed">
         Цахим шуудан : jpa@naog.edu.mn
       </p>
+       {/* --- ШИНЭЭР НЭМЭХ ХЭСЭГ: Зураг товч --- */}
+      <div className="mt-8 flex justify-center">
+  <Link 
+    href="/for-authors" 
+    className="block transition-all active:scale-95 duration-200 text-blue-600 hover:text-blue-800 font-medium underline"
+  >
+    Дэлгэрэнгүй үзэх
+  </Link>
+</div>
+      
     </div>
               {(journal.informationSections?.length ?? 0) > 0 ? (
                 journal.informationSections?.map((section: InformationSection, index: number) => (
@@ -110,8 +120,8 @@ export default async function Home() {
                         <Image
                           src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn'}${section.sectionLogo}`}
                           alt={section.sectionTitle || 'Section logo'}
-                          width={80}
-                          height={80}
+                          width={200}
+                          height={150}
                           unoptimized
                           className="object-contain"
                         />

@@ -32,7 +32,9 @@ export default function Navbar() {
     height={75} // h-10 нь 40px-тэй тэнцэнэ
     className="object-contain"
   />
-  <span>Төрийн удирдлага</span>
+  <span className="font-mogul text-2xl font-bold italic">
+  Төрийн удирдлага
+</span>
 </Link>
           </div>
 

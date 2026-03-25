@@ -10,6 +10,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+      // '--font-mogul' хувьсагчийг 'font-mogul' класс болгож байна
+      mogul: ['var(--font-mogul)', 'sans-serif'],
+    },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
