@@ -10,7 +10,7 @@ export default function ExpandableSummary({ summary }: { summary: string }) {
     <div className="mt-2 w-full overflow-hidden"> {/* Гадагшаа халихаас сэргийлнэ */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1 text-[#0ea5e9] text-[13px] hover:underline"
+        className="flex items-center gap-1 text-blue-900 text-[15px] font-bold hover:underline"
       >
         Хураангуй {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
       </button>

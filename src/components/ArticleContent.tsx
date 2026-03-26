@@ -9,13 +9,17 @@ interface ArticleProps {
       Summary?: string;
       summary_text?: string;
       author_text?: string;
-      works_text?: string;
+      works_text?: string; 
+      key?: string;
+      Key?: string; 
+      
     };
     // Хэрэв өгөгдөл flatten хийгдсэн бол:
     Summary?: string;
     summary_text?: string;
     author_text?: string;
     works_text?: string;
+
   };
 }
 
@@ -36,19 +40,32 @@ export default function ArticleContent({ article }: ArticleProps) {
 
       <div className="min-h-300px">
         {/* 1. ХУРААНГУЙ */}
-        {activeTab === 'summary' && (
-          <div className="bg-white p-8 rounded-2xl border border-slate-100 animate-in fade-in duration-500">
-            <div className="text-slate-700 leading-relaxed text-lg whitespace-pre-line">
-              {/* summary_text эсвэл Summary-г уншина */}
-              {data?.summary_text || data?.Summary || "Хураангуй оруулаагүй байна."}
-            </div>
-          </div>
-        )}
+{activeTab === 'summary' && (
+  <div className="bg-white p-8 rounded-2xl border border-slate-100 animate-in fade-in duration-500">
+    <div className="text-slate-900 leading-relaxed text-lg whitespace-pre-line">
+      {data?.summary_text || data?.Summary || "Хураангуй оруулаагүй байна."}
+      
+      {/* Түлхүүр үгсийг энд нэмж байна */}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {((data as any)?.key || (data as any)?.Key) && (
+        <div className="mt-6 pt-6 border-t border-slate-100">
+          <p className="text-[16px] text-slate-700">
+            <span className="font-bold text-blue-900">Түлхүүр үг: </span>
+            <span className="font-medium italic">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {(data as any)?.key || (data as any)?.Key}
+            </span>
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+)}
 
         {/* 2. ЗОХИОГЧИЙН ТУХАЙ */}
         {activeTab === 'author' && (
           <div className="bg-white p-8 rounded-2xl border border-slate-100 animate-in fade-in duration-500">
-            <div className="text-slate-700 leading-relaxed text-lg whitespace-pre-line">
+            <div className="text-slate-900 leading-relaxed text-lg whitespace-pre-line">
               {data?.author_text || "Зохиогчийн мэдээлэл байхгүй."}
             </div>
           </div>
@@ -57,7 +74,7 @@ export default function ArticleContent({ article }: ArticleProps) {
         {/* 3. БҮТЭЭЛИЙН ЖАГСААЛТ */}
         {activeTab === 'works' && (
           <div className="bg-white p-8 rounded-2xl border border-slate-100 animate-in fade-in duration-500">
-            <div className="text-slate-700 leading-relaxed text-lg whitespace-pre-line">
+            <div className="text-slate-900 leading-relaxed text-lg whitespace-pre-line">
               {data?.works_text || "Бүтээлийн жагсаалт хоосон байна."}
             </div>
           </div>

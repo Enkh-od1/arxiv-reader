@@ -1,12 +1,11 @@
 "use client";
 
 import Link from 'next/link';
-import { Moon, Sun, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
 
 export default function Navbar() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -47,12 +46,7 @@ export default function Navbar() {
           </ul>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
+            
 
             <button className="bg-white text-blue-800 px-5 py-2.5 rounded-lg font-semibold hover:bg-blue-50 transition shadow-md">
               Нэвтрэх

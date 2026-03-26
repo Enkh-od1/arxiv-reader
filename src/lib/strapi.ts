@@ -64,6 +64,7 @@ export interface Article {
   pdfUrl: string | null;
   Views: number;
   views: number;
+  key:string;
 }
 
 interface StrapiResponseItem {
@@ -106,6 +107,8 @@ interface StrapiAttributes {
   authors?: string;
   Summary?: string;
   summary?: string;
+  key:string;
+  Key:string;
   PageCount?: string;
   pages?: string;
   Views?: number;
@@ -312,6 +315,7 @@ articles: (attr.niitleluud?.data || attr.niitleluud || []).map((art: StrapiRawIt
     pageCount: a.PageCount || a.pages || "—",
     views: Number(a.Views || a.views || 0),
     pdfUrl: a.pdfUrl || a.PDF?.data?.attributes?.url || null,
+    key: a.Key || a.key || "Түлхүүр үг байхгүй",
   };
 }),
 

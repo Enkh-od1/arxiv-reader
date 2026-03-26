@@ -5,6 +5,14 @@ import { FileText, Eye } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+interface ArticleType {
+  attributes?: { Authors?: string };
+  Authors?: string;
+  authors?: string;
+  key?: string;
+  Key?: string;
+}
+
 export default async function IssueDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const issue = await getIssueById(id);
@@ -51,8 +59,8 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
     </Link>
             
             {/* Б. Зохиогч (Италик, саарал) */}
-            <p className="text-[15px] text-slate-500 mb-4 font-medium">
-              {article.authors}
+            <p className="text-[15px] text-slate-900 mb-4 font-bold">
+              Зохиогч: {(article as ArticleType).authors || (article as ArticleType).Authors || "Зохиогч байхгүй"}
             </p>
 
             {/* В. PDF Линк (Том товч биш, цэнхэр линк) */}
@@ -69,7 +77,7 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
             </div>
 
             {/* Г. Мета өгөгдөл (Хуудас, Үзсэн тоо) */}
-            <div className="flex items-center gap-6 text-slate-400 text-[13px] font-semibold mb-5">
+            <div className="flex items-center gap-6 text-slate-900 text-[13px] font-semibold mb-5">
               <div className="flex items-center gap-1.5">
                 <FileText size={16} strokeWidth={2.5} />
                 <span>{article.pageCount}</span>
@@ -84,6 +92,14 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
             {article.summary && (
               <ExpandableSummary summary={article.summary} />
             )}
+
+
+            <p className="text-[15px] mb-4 text-slate-700">
+  <span className="font-bold text-blue-900">Түлхүүр үг: </span>
+  <span className="font-medium italic">
+    {(article as ArticleType).key || (article as ArticleType).Key || ""}
+  </span>
+</p>
           </div>
         ))}
       </div>

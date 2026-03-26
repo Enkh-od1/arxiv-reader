@@ -67,7 +67,7 @@ export default async function Home() {
         <span className="text-blue-600 font-bold text-sm px-2 py-0.5 bg-white rounded-full w-fit shadow-sm mx-auto md:mx-0">
           {latestIssue.year} он
         </span>
-        <h3 className="text-xl md:text-2xl font-extrabold text-[#003d71] mt-2 mb-4 leading-tight">
+        <h3 className="text-xl md:text-2xl font-bold text-[#003d71] mt-2 mb-4 leading-tight">
           № {latestIssue.number} <br className="md:block" /> ({latestIssue.title})
         </h3>
         <Link 
