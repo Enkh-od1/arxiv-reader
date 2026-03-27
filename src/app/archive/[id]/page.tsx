@@ -90,16 +90,13 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
 
             {/* Д. Хураангуй (Дэлгэрдэг хэсэг) */}
             {article.summary && (
-              <ExpandableSummary summary={article.summary} />
-            )}
+  <ExpandableSummary 
+    summary={article.summary} 
+    // Түлхүүр үгийг энд дамжуулж байна
+    keywords={(article as ArticleType).key || (article as ArticleType).Key || ""} 
+  />
+)}
 
-
-            <p className="text-[15px] mb-4 text-slate-700">
-  <span className="font-bold text-blue-900">Түлхүүр үг: </span>
-  <span className="font-medium italic">
-    {(article as ArticleType).key || (article as ArticleType).Key || ""}
-  </span>
-</p>
           </div>
         ))}
       </div>
