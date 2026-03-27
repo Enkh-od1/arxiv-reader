@@ -32,7 +32,7 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
           />
         </div>
         <div className="flex-1 text-center md:text-left pt-2">
-          <h1 className="text-3xl font-extrabold text-slate-900 mb-4 leading-tight">
+          <h1 className="text-xl md:text-2xl font-bold text-[#003d71] mt-2 mb-4 leading-tight">
             {issue.title}
           </h1>
           <div className="flex flex-wrap justify-center md:justify-start gap-4 text-slate-500 font-semibold text-sm uppercase tracking-wider">
@@ -44,7 +44,7 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
 
       {/* 2. Өгүүллүүдийн жагсаалт */}
       <div className="space-y-12">
-        <h2 className="text-xl font-black text-slate-800 border-b-2 border-slate-900 pb-2 inline-block">
+        <h2 className="text-xl font-black text-slate-700 border-b-2 border-slate-900 pb-2 inline-block">
           ЭНЭ ДУГААРТ:
         </h2>
 

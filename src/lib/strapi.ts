@@ -228,29 +228,45 @@ export async function getEditorialMembers() {
 
 // src/lib/strapi.ts
 
-export async function getIssues(page: number = 1, pageSize: number = 12) {
+export async function getIssues(page: number = 1, pageSize: number = 20, year?: number) {
   try {
-    const query = `pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate[Cover]=*&sort=Year:desc&sort=Number:desc`;
-    const res = await fetch(`${STRAPI_URL}/api/issues?${query}`, { cache: 'no-store' });
+    // 1. URL-ийн параметрүүдийг бэлдэх
+    const params = new URLSearchParams({
+      'pagination[page]': page.toString(),
+      'pagination[pageSize]': pageSize.toString(),
+      'populate[Cover]': '*',
+      'sort[0]': 'Year:desc',
+      'sort[1]': 'Number:desc',
+    });
+
+    // 2. Хэрэв year (он) сонгогдсон бол Strapi шүүлтүүрийг нэмэх
+    if (year) {
+      params.append('filters[Year][$eq]', year.toString());
+    }
+
+    const res = await fetch(`${STRAPI_URL}/api/issues?${params.toString()}`, { 
+      cache: 'no-store' 
+    });
     
     if (!res.ok) return { issues: [], pagination: null };
 
     const json = await res.json();
 
-    // 'item: any' биш, доорх байдлаар бичвэл алдаа арилна
+    // 3. Өгөгдлийг хөрвүүлэх (Mapping)
     const issues = json.data.map((item: StrapiIssue) => {
-  const attr = item.attributes || item; 
+      // Strapi v4 болон v5-ийн ялгааг тооцоолж attributes-ийг авах
+      const attr = item.attributes || item; 
 
-  return {
-    id: item.id,
-    documentId: item.documentId || item.id?.toString(),
-    title: attr.Title || "Гарчиггүй",
-    year: Number(attr.Year || 0),
-    number: attr.Number || "0",
-    // ЭНД getFullUrl() ашиглан хаягийг бүтэн (http://jpa.naog.edu.mn...) болгоно
-    coverUrl: getFullUrl(attr.Cover?.url || attr.Cover?.data?.attributes?.url),
-  };
-});
+      return {
+        id: item.id,
+        documentId: item.documentId || item.id?.toString(),
+        title: attr.Title || "Гарчиггүй",
+        year: Number(attr.Year || 0),
+        number: attr.Number || "0",
+        // Зургийн URL-ийг бүтэн болгох
+        coverUrl: getFullUrl(attr.Cover?.url || attr.Cover?.data?.attributes?.url),
+      };
+    });
 
     return { 
       issues, 
@@ -261,6 +277,7 @@ export async function getIssues(page: number = 1, pageSize: number = 12) {
     return { issues: [], pagination: null };
   }
 }
+
 
 
 
@@ -446,6 +463,10 @@ export async function getArticleByDocumentId(id: string) {
   const json = await res.json();
   return json.data;
 }
+
+// src/lib/strapi.ts
+
+
 
 
 
