@@ -8,9 +8,9 @@ export default function BackButton() {
   return (
     <button 
       onClick={() => router.back()} 
-      className="flex items-center gap-2 text-slate-900 hover:text-blue-600 mb-8 transition-colors group"
+      className="flex items-center text-sm gap-2 text-slate-900 hover:text-blue-600 mb-8 transition-colors group"
     >
-      <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+      <ChevronLeft size={15} className="group-hover:-translate-x-1 transition-transform" />
       <span>Буцах</span>
     </button>
   );

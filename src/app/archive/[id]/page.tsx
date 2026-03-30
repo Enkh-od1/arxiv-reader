@@ -20,7 +20,17 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
   if (!issue) return <p className="text-center py-20 text-slate-500 font-medium">Сэтгүүл олдсонгүй.</p>;
 
   return (
+
+    
     <div className="max-w-4xl mx-auto px-6 py-12 bg-white">
+ 
+ <nav className="text-sm text-slate-500 mb-6 flex gap-2 items-center">
+        <Link href="/home" className="hover:text-blue-600 transition-colors">Нүүр</Link>
+        <span>/</span>
+        <Link href="/archive" className="hover:text-blue-600 transition-colors">Архив</Link>
+            <span></span>
+      </nav>
+
       {/* 1. Сэтгүүлийн толгой хэсэг (Header) */}
       <div className="flex flex-col md:flex-row gap-10 mb-16 border-b pb-12 items-center md:items-start">
         <div className="w-44 h-60 relative shadow-xl rounded-md overflow-hidden border border-slate-100 shrink-0">
@@ -35,7 +45,7 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
           <h1 className="text-xl md:text-2xl font-bold text-[#003d71] mt-2 mb-4 leading-tight">
             {issue.title}
           </h1>
-          <div className="flex flex-wrap justify-center md:justify-start gap-4 text-slate-500 font-semibold text-sm uppercase tracking-wider">
+          <div className="flex flex-wrap justify-center md:justify-start gap-4 text-slate-900 font-bold text-sm uppercase tracking-wider">
             <span className="bg-slate-100 px-3 py-1 rounded">Он: {issue.year}</span>
             <span className="bg-slate-100 px-3 py-1 rounded">Дугаар: {issue.number}</span>
           </div>
@@ -44,7 +54,7 @@ export default async function IssueDetailPage({ params }: { params: Promise<{ id
 
       {/* 2. Өгүүллүүдийн жагсаалт */}
       <div className="space-y-12">
-        <h2 className="text-xl font-black text-slate-700 border-b-2 border-slate-900 pb-2 inline-block">
+        <h2 className="text-xl font-black text-[#003d71] border-b-2 border-slate-900 pb-2 inline-block">
           ЭНЭ ДУГААРТ:
         </h2>
 

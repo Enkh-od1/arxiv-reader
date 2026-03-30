@@ -30,9 +30,15 @@ export default async function ArchivePage({
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
+
+      <nav className="text-sm text-slate-500 mb-6 flex gap-2 items-center">
+        <Link href="/home" className="hover:text-blue-600 transition-colors">Нүүр</Link>
+        <span></span>
+
+      </nav>
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6 border-b pb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-[#003d71] mb-6 text-center">Сэтгүүлийн архив</h1>
-        
+
         {/* --- DROPDOWN ШҮҮЛТҮҮР --- */}
         <div className="flex items-center gap-3">
   <span className="text-sm font-medium text-slate-900 text-bold whitespace-nowrap">
