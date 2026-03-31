@@ -3,123 +3,85 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-interface IssueData {
-  id?: number;
-  documentId?: string;
-  title?: string;
-  Title?: string;
-  pages?:number;
+// 1. Сэтгүүлийн дугаарын (Issue) үндсэн өгөгдөл
+interface IssueAttributes {
+  Title?: string;      // 'Title' биш
+  number?: string | number;  // 'Number' биш
+  publishedYear?: string | number;
+  Number?: string;
 }
 
+// 2. Сэтгүүлийн дугаарын (Issue) Strapi-ийн стандарт бүтэц
+interface IssueData {
+  id?: number | string;
+  documentId?: string;
+  attributes?: IssueAttributes;
+  
+}
+
+// 3. Өгүүллийн (Article) бүх талбарууд
 interface ArticleAttributes {
+  title?: string;
   Title?: string;
   summary_text?: string;
   Summary?: string;
   author_text?: string;
   works_text?: string;
-  issueNumber?: string;
-   journalName?: string; // Нэмэх
-  volume?: string;      // Нэмэх
-  pages?: string;       // Нэмэх       // Нэмэх
-  key?: string;
-  Key?: string; 
-  itle?: string;
-  title?: string;
   doi?: string;
+  key?: string;
+  Key?: string;
   publishedAt?: string;
-  customDate?: string;
   customPublishedDate?: string;
-  // Issue нь 'data' дотор байх эсвэл шууд байх тохиолдлыг шийдэх
+  pages?: string;
+  PageCount?: string;
+  volume?: string;
+  journalName?: string;
+  // Issue холбоос - Хамгийн чухал хэсэг:
   issue?: {
     data?: IssueData;
-  } | IssueData;
+  };
 }
 
+// 4. Компонентийн хүлээж авах Props
 interface ArticleProps {
   article: {
     id?: number;
     documentId?: string;
-    issue?: {
-      data?: {
-        id?: number | string;
-        documentId?: string;
-        attributes?: {
-          title?: string;
-        };
-      };
-    };
-    attributes?: ArticleAttributes & {
-      issue?: {
-        data?: {
-          id?: number | string;
-          documentId?: string;
-        };
-      };
-    };
+    attributes?: ArticleAttributes;
   } & ArticleAttributes;
 }
 
-interface IssueAttributes {
-  title?: string;
-  publishedAt?: string;
-}
-
-interface IssueDataNode {
-  id?: string | number;
-  documentId?: string;
-  attributes?: IssueAttributes;
-
-  
-}
-
-
-interface ArticleData {
-  title?: string;
-  pageCount?: string | number;
-  issue?: {
-    title?: string;
-    Title?: string;
-    number?: string | number;
-    Number?: string | number;
-    // Strapi-ийн гүн бүтэц:
-    data?: {
-      attributes?: {
-        title?: string;
-        Title?: string;
-        number?: string | number;
-        Number?: string | number;
-      };
-    };
-  };
-}
 
 
 export default function ArticleContent({ article }: ArticleProps) {
-
-  const formatFullDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}.${month}.${day}`; // Үр дүн: 2025.03.13
-};
-  // Өгөгдлийг аюулгүй салгаж авах
+  // 1. Үндсэн датаг салгах
   const data = article?.attributes || article;
+// 1. Issue-ийн өгөгдлийг Strapi-ийн бүтцээс салгах
+const issueData = data?.issue?.data?.attributes || article?.issue?.data?.attributes;
 
-  // 2. issueId болон issueTitle-г авах
-  const issueId = 
-    article.issue?.data?.id || 
-    article.issue?.data?.documentId || 
-    article.attributes?.issue?.data?.id || 
-    article.attributes?.issue?.data?.documentId;
 
-  // Энэ мөрийг заавал нэмж өгөөрэй:
-  const issueData = (article.issue as { data?: IssueDataNode })?.data;
+const issueId = data?.issue?.data?.id || data?.issue?.data?.documentId || article?.issue?.data?.id;
 
-const issueTitle = 
-  issueData?.attributes?.title || 
-  (article.issue as IssueAttributes)?.title || 
-  "Сэтгүүлийн дугаар";
+const rawDate = data?.customPublishedDate || data?.publishedAt;
+const extractedYear = rawDate ? new Date(rawDate).getFullYear() : "2026";
+
+// 2. Динамик утгууд (Утга байхгүй бол хоосон үлдэнэ, 30 эсвэл 32 гэж хатуу заахгүй)
+const issueNumber = issueData?.Number;         // Дугаар (Vol.)
+const publishedYear = extractedYear;                     // Таны Админаас оруулсан ОН
+const journalTitle = issueData?.Title; // Сэтгүүлийн нэр
+
+// 3. Issue-ийн ID (Холбоос хийхэд хэрэгтэй)
+
+   const formatFullDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+  // Өгөгдлийг аюулгүй салгаж авах
+
 
   return (
     <div className="w-full">
@@ -265,12 +227,12 @@ const issueTitle =
   
   {/* 1. PUBLISHED */}
   <div className="bg-slate-100 p-4 rounded-sm border-t-4 border-slate-300">
+    <p className="text-[11px] font-bold text-slate-500 uppercase mb-2">Published</p>
   <p className="text-slate-700 text-sm">
-  {/* data.customPublishedDate-ийг шууд ашиглана */}
   {data?.customPublishedDate 
-    ? formatFullDate(data.customPublishedDate) 
+    ? formatFullDate(data.customPublishedDate as string) // 'as string' гэж нэмэв
     : data?.publishedAt 
-      ? formatFullDate(data.publishedAt) 
+      ? formatFullDate(data.publishedAt as string)      // 'as string' гэж нэмэв
       : '2025.03.13'}
 </p>
 </div>
@@ -288,22 +250,20 @@ const issueTitle =
       .map(line => line.split(',')[0].trim());
     
     const authorStr = names.join(', ');
-    const d = data as ArticleData;
+    
+    
 
     // 2. Бусад мэдээллийг бэлдэх
-    const year = data?.publishedAt ? new Date(data.publishedAt).getFullYear() : '2025';
+    const publishedYear = extractedYear;
     const journal = data?.Title || 'Өгүүллийн нэр'; // Сэтгүүлийн нэр
-    const volume = d?.issue?.Title || d?.title || 'Төрийн удирдлага';
-    const issueNumber = d?.issue?.Number 
-  ? `(${d.issue.Number})` 
-  : '';
-    const pageRange = d?.pageCount 
-  ? `, хх. ${d.pageCount}` 
-  : ''; 
+    const journalTitle = issueData?.Title || "Төрийн удирдлага";
+    const issueNumber = issueData?.Number; 
+    const pageRange = data?.pages || data?.PageCount;    // Дугаар (Vol.)          // Таны Админаас оруулсан ОН
+    
 
     // 3. Бүгдийг нэгтгэж форматлах
     // Формат: Зохиогч (Он). Өгүүллийн нэр. Сэтгүүлийн нэр, Дугаар, Хуудас.
-    return `${authorStr} (${year}). ${journal}, ${volume}${issueNumber}${pageRange}.`;
+    return `${authorStr} (${publishedYear}). ${journal}, ${journalTitle}. Vol.${issueNumber}. ${pageRange}`;
   })()}
 </p>
 
@@ -316,18 +276,31 @@ const issueTitle =
 </div>
 
 {/* 3. ISSUE */}
-<div className="bg-slate-100 p-4 rounded-sm border-t-4 border-slate-300">
-  <p className="text-[11px] font-bold text-slate-500 uppercase mb-2">Issue</p>
-  {data?.Title || data?.title ? (
-    /* Энд /articles/ биш, /issues/ болон сэтгүүлийн ID-г тавина */
-  <h3 className="text-sm font-bold text-slate-900 leading-snug hover:text-blue-700 transition-colors cursor-pointer">
-    {data?.Title || data?.title}
-  </h3>
 
-  ) : (
-    <p className="text-sm text-slate-400 italic">Мэдээлэл байхгүй</p>
-  )}
+
+
+<div className="bg-[#f8f9fa] border border-slate-200 rounded-sm overflow-hidden">
+  <div className="px-4 py-2 border-b border-slate-200 bg-[#f1f3f5]">
+    <h3 className="text-[11px] font-bold text-slate-500 uppercase mb-2">Issue</h3>
+  </div>
+  <div className="p-4 bg-white">
+    {issueId ? (
+      <Link href={`/archive/${issueId}`} className="group block">
+        <span className="text-[#005c97] hover:underline text-[14px] font-medium leading-snug">
+          {/* Энд зөвхөн АДМИН-аас оруулсан ОН харагдана */}
+          Vol. {issueNumber} ({publishedYear}): 
+          <span className="ml-1 group-hover:underline text-[#005c97]">
+            {journalTitle}
+          </span>
+        </span>
+      </Link>
+    ) : (
+      <p className="text-slate-400 text-xs italic">Мэдээлэл ачаалж байна...</p>
+    )}
+  </div>
 </div>
+
+
 
 
 
@@ -335,7 +308,7 @@ const issueTitle =
   <div className="bg-slate-100 p-4 rounded-sm border-t-4 border-slate-300">
     <p className="text-[11px] font-bold text-slate-500 uppercase mb-2">License</p>
     <p className="text-slate-700 text-[12px] leading-snug mb-3">
-  Copyright (c) {new Date().getFullYear()} {(() => {
+  Copyright (c) {publishedYear} {(() => {
     // 1. Текстийг мөр мөрөөр нь салгах
     const lines = data?.author_text?.split('\n') || [];
     
