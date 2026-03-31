@@ -7,18 +7,28 @@ interface IssueData {
   id?: number;
   documentId?: string;
   title?: string;
+  Title?: string;
+  pages?:number;
 }
 
 interface ArticleAttributes {
+  Title?: string;
   summary_text?: string;
   Summary?: string;
   author_text?: string;
   works_text?: string;
+  issueNumber?: string;
+   journalName?: string; // Нэмэх
+  volume?: string;      // Нэмэх
+  pages?: string;       // Нэмэх       // Нэмэх
   key?: string;
   Key?: string; 
+  itle?: string;
   title?: string;
   doi?: string;
   publishedAt?: string;
+  customDate?: string;
+  customPublishedDate?: string;
   // Issue нь 'data' дотор байх эсвэл шууд байх тохиолдлыг шийдэх
   issue?: {
     data?: IssueData;
@@ -58,12 +68,43 @@ interface IssueDataNode {
   id?: string | number;
   documentId?: string;
   attributes?: IssueAttributes;
+
+  
 }
 
+
+interface ArticleData {
+  title?: string;
+  pageCount?: string | number;
+  issue?: {
+    title?: string;
+    Title?: string;
+    number?: string | number;
+    Number?: string | number;
+    // Strapi-ийн гүн бүтэц:
+    data?: {
+      attributes?: {
+        title?: string;
+        Title?: string;
+        number?: string | number;
+        Number?: string | number;
+      };
+    };
+  };
+}
+
+
 export default function ArticleContent({ article }: ArticleProps) {
+
+  const formatFullDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}.${month}.${day}`; // Үр дүн: 2025.03.13
+};
   // Өгөгдлийг аюулгүй салгаж авах
   const data = article?.attributes || article;
-  const title = data?.title || article?.title || "Гарчиггүй өгүүлэл";
 
   // 2. issueId болон issueTitle-г авах
   const issueId = 
@@ -224,38 +265,71 @@ const issueTitle =
   
   {/* 1. PUBLISHED */}
   <div className="bg-slate-100 p-4 rounded-sm border-t-4 border-slate-300">
-    <p className="text-[11px] font-bold text-slate-500 uppercase mb-2">Published</p>
-    <p className="text-slate-700 text-sm">
-      {data?.publishedAt ? new Date(data.publishedAt).toLocaleDateString() : '2025-06-29'}
-    </p>
-  </div>
+  <p className="text-slate-700 text-sm">
+  {/* data.customPublishedDate-ийг шууд ашиглана */}
+  {data?.customPublishedDate 
+    ? formatFullDate(data.customPublishedDate) 
+    : data?.publishedAt 
+      ? formatFullDate(data.publishedAt) 
+      : '2025.03.13'}
+</p>
+</div>
 
   {/* 2. HOW TO CITE */}
 <div className="bg-slate-100 p-4 rounded-sm border-t-4 border-slate-300">
   <p className="text-[11px] font-bold text-slate-500 uppercase mb-2">How to Cite</p>
   <div className="text-slate-700 text-[13px] leading-relaxed mb-4">
-    {data?.author_text?.split('\n')[0]}, &ldquo;{title}&rdquo;, 
-    <span className="italic"> JPA. Journal of Public Administration</span>, 
-    {issueTitle ? ` vol. ${issueTitle}` : ''}, {new Date().getFullYear()}.
+    <p className="text-slate-700 text-[12px] leading-snug mb-3">
+  {(() => {
+    // 1. Зохиогчдын нэрийг салгаж авах (Таны өмнөх логик)
+    const lines = data?.author_text?.split('\n') || [];
+    const names = lines
+      .filter(line => /^[А-Я]\./.test(line.trim()))
+      .map(line => line.split(',')[0].trim());
+    
+    const authorStr = names.join(', ');
+    const d = data as ArticleData;
+
+    // 2. Бусад мэдээллийг бэлдэх
+    const year = data?.publishedAt ? new Date(data.publishedAt).getFullYear() : '2025';
+    const journal = data?.Title || 'Өгүүллийн нэр'; // Сэтгүүлийн нэр
+    const volume = d?.issue?.Title || d?.title || 'Төрийн удирдлага';
+    const issueNumber = d?.issue?.Number 
+  ? `(${d.issue.Number})` 
+  : '';
+    const pageRange = d?.pageCount 
+  ? `, хх. ${d.pageCount}` 
+  : ''; 
+
+    // 3. Бүгдийг нэгтгэж форматлах
+    // Формат: Зохиогч (Он). Өгүүллийн нэр. Сэтгүүлийн нэр, Дугаар, Хуудас.
+    return `${authorStr} (${year}). ${journal}, ${volume}${issueNumber}${pageRange}.`;
+  })()}
+</p>
+
   </div>
-  <select className="w-full text-xs p-2 border border-slate-300 bg-white rounded-sm focus:outline-none">
-    <option>More Citation Formats</option>
-    <option>APA</option>
-    <option>MLA</option>
+  
+    <select className="w-full text-xs p-2 border border-slate-300 bg-white rounded-sm focus:outline-none">
+    <option>APA 7</option>
   </select>
+
 </div>
 
 {/* 3. ISSUE */}
 <div className="bg-slate-100 p-4 rounded-sm border-t-4 border-slate-300">
   <p className="text-[11px] font-bold text-slate-500 uppercase mb-2">Issue</p>
-  {issueId ? (
-    <Link href={`/archive/${issueId}`} className="text-blue-600 text-sm font-medium hover:underline decoration-blue-400">
-      {issueTitle || "Vol. 7 No. 1 (2025)"}
-    </Link>
+  {data?.Title || data?.title ? (
+    /* Энд /articles/ биш, /issues/ болон сэтгүүлийн ID-г тавина */
+  <h3 className="text-sm font-bold text-slate-900 leading-snug hover:text-blue-700 transition-colors cursor-pointer">
+    {data?.Title || data?.title}
+  </h3>
+
   ) : (
-    <p className="text-sm text-slate-400">Мэдээлэл байхгүй</p>
+    <p className="text-sm text-slate-400 italic">Мэдээлэл байхгүй</p>
   )}
 </div>
+
+
 
   {/* 4. LICENSE */}
   <div className="bg-slate-100 p-4 rounded-sm border-t-4 border-slate-300">
