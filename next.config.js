@@ -17,11 +17,7 @@ const nextConfig = {
     ],
   },
   // --- ЭНЭ ХЭСГИЙГ ЯГ ИНГЭЖ СОЛИОРОЙ ---
-  devIndicators: {
-    appIsrStatus: false, // Шинэ хувилбарт "N" арилгана
-    buildActivity: false, // Баруун доорх ачааллыг арилгана
-    staticIndicator: false, // Хуучин хувилбарт "N" арилгана
-  },
+  devIndicators: false,
   // -----------------------------------
 };
 
