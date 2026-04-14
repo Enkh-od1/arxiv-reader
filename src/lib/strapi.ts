@@ -1,4 +1,4 @@
-const STRAPI_URL = 'http://jpa.naog.edu.mn:1337';
+const STRAPI_URL = 'https://naog.edu.mn';
 
 // --- Интерфэйсүүдийг export хийх ---
 export interface EditorialMember {
@@ -452,7 +452,7 @@ export async function getInformationPage() {
 // lib/strapi.ts
 export async function getArticleByDocumentId(id: string) {
   // URL байгаа эсэхийг шалгах, байхгүй бол шууд localhost ашиглах
-  const baseUrl = process.env.STRAPI_API_URL || 'http://jpa.naog.edu.mn:1337';
+  const baseUrl = process.env.STRAPI_API_URL || 'https://naog.edu.mn';
   
   const res = await fetch(
     `${baseUrl}/api/articles/${id}?populate=*`, 

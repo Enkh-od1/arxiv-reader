@@ -5,7 +5,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'jpa.naog.edu.mn',
+        hostname: 'naog.edu.mn',
         pathname: '/uploads/**',
       },
       {
