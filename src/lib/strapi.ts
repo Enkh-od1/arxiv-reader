@@ -1,4 +1,4 @@
-const STRAPI_URL = 'https://naog.edu.mn';
+const STRAPI_URL = 'https://jpa.naog.edu.mn';
 
 // --- Интерфэйсүүдийг export хийх ---
 export interface EditorialMember {

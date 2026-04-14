@@ -23,7 +23,7 @@ export default function PdfButton({ articleId, pdfUrl, currentViews }: PdfButton
     }
 
     // 3. Линк рүү үсрэх
-    const strapiBaseUrl = 'http://jpa.naog.edu.mn:1337';
+    const strapiBaseUrl = 'https://naog.edu.mn';
     const finalUrl = pdfUrl.startsWith('http') ? pdfUrl : `${strapiBaseUrl}${pdfUrl}`;
     window.open(finalUrl, '_blank');
   };

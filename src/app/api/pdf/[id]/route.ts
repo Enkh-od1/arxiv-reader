@@ -9,7 +9,7 @@ export async function GET(
 
     // 1. URL-ийг бүтнээр нь порттой нь (1337), uploads хавтастай нь бичнэ
     // 2. Хашилтыг ( ` ) ашиглаж, id-ийн өмнө $ тэмдэг заавал тавина
-    const pdfUrl = `http://jpa.naog.edu.mn${id}.pdf`; 
+    const pdfUrl = `https://naog.edu.mn${id}.pdf`; 
 
     const response = await fetch(pdfUrl);
 

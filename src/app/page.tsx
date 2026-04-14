@@ -118,7 +118,7 @@ export default async function Home() {
                     {section.sectionLogo && (
                       <div className="mx-auto mb-4 w-24 h-24 flex items-center justify-center bg-gray-50 rounded-full border-2 border-blue-50 p-3 group-hover:border-blue-200 transition-colors">
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://jpa.naog.edu.mn'}${section.sectionLogo}`}
+                          src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'https://naog.edu.mn'}${section.sectionLogo}`}
                           alt={section.sectionTitle || 'Section logo'}
                           width={200}
                           height={150}
@@ -156,7 +156,7 @@ export default async function Home() {
   /* 1. flex items-center justify-center нэмснээр хайрцаг доторх бүх зүйл голлоно */
   <div className="w-full h-40 flex items-center justify-center bg-gray-50 rounded-xl border border-gray-200 p-6 mb-4 shadow-sm group-hover:border-blue-300 transition-all">
     <Image
-      src={`http://jpa.naog.edu.mn:1337${partner.partnerLogo}`}
+      src={`https://naog.edu.mn${partner.partnerLogo}`}
       alt={partner.partnerName || 'Partner'}
       width={200}
       height={150}
