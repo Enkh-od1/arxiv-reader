@@ -34,7 +34,7 @@ export default function DownloadButton({ article }: DownloadButtonProps) {
 
     // ХАМГИЙН ЧУХАЛ ХЭСЭГ: URL-ийг бүтэн болгох
     // Хэрэв зам нь /uploads/... гэж эхэлж байвал Strapi-ийн хаягийг урд нь заавал залгана
-    const strapiUrl = 'https://naog.edu.mn';
+    const strapiUrl = 'https://jpa.naog.edu.mn';
   
   // Хэрэв линк нь 'http'-ээр эхэлсэн байвал шууд нээнэ (Гадны линк)
   // Үгүй бол Strapi-ийн хаягийг залгана (Дотоод файл)
