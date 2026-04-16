@@ -111,6 +111,7 @@ interface StrapiAttributes {
   PageCount?: string;
   pages?: string;
   id: number;
+  pageCount: number;
   documentId: string;
   Views?: number;
   views?: number;
@@ -333,10 +334,11 @@ const url = `${STRAPI_URL}/api/issues/${id}?populate[niitleluud][populate]=*&pop
           authors: a.Authors || "Зохиогч байхгүй",
           summary: a.summary || "",
           key: a.key || "",
-          pageCount: a.pages || "0",
           views: a.views || 0,
+          pageCount: a.pages || a.PageCount || "0",
           // PDF файлыг media талбараас авах
           pdfUrl: getFullUrl(a.PDFUrl?.url || a.PDFUrl?.data?.attributes?.url)
+          
         };
       }) : []
     };
@@ -357,7 +359,7 @@ export async function updateArticleViews(documentId: string, currentViews: numbe
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         data: { 
-          Views: currentViews + 1 // Энд заавал том 'Views' байх ёстой
+          views: currentViews + 1 // Энд заавал том 'Views' байх ёстой
         } 
       }),
     });

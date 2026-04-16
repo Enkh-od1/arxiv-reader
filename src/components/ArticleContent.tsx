@@ -255,7 +255,7 @@ const journalTitle = issueData?.Title; // Сэтгүүлийн нэр
 
     // 2. Бусад мэдээллийг бэлдэх
     const publishedYear = extractedYear;
-    const journal = data?.Title || 'Өгүүллийн нэр'; // Сэтгүүлийн нэр
+    const journal = data?.title || 'Өгүүллийн нэр'; // Сэтгүүлийн нэр
     const journalTitle = issueData?.Title || "Төрийн удирдлага";
     const issueNumber = issueData?.Number; 
     const pageRange = data?.pages || data?.PageCount;    // Дугаар (Vol.)          // Таны Админаас оруулсан ОН
