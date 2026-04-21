@@ -64,7 +64,7 @@ export default function AboutPage() {
   Сэтгүүлд бүтээлээ нийтлүүлэх нь үнэ төлбөргүй.
 </p>
 <p className="my-4 text-slate-700">
-  Сэтгүүлд бүтээлээ ирүүлэх цахим хаяг : <a href="https://doaj.org/about/" target="_blank" rel="noreferrer" className="underline text-blue-600 hover:text-blue-800 transition-colors"> jpa.naog.edu.mn
+  Сэтгүүлд бүтээлээ ирүүлэх цахим хаяг : <a href="https://doaj.org/about/" target="_blank" rel="noreferrer" className="underline text-blue-600 hover:text-blue-800 transition-colors"> jpa@naog.edu.mn
     
   </a>
 </p>
