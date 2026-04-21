@@ -13,7 +13,7 @@ export default async function ArchivePage({
   const selectedYear = params.year ? Number(params.year) : undefined;
 
   // getIssues функц руу selectedYear-ийг дамжуулна
-  const { issues, pagination } = await getIssues(currentPage, 20, selectedYear);
+  const { issues, pagination } = await getIssues(currentPage, 19, selectedYear);
 
   // Боломжит онуудын жагсаалт
   const availableYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017]; 

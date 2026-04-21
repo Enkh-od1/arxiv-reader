@@ -49,9 +49,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             
 
-            <button className="bg-white text-blue-800 px-5 py-2.5 rounded-lg font-semibold hover:bg-blue-50 transition shadow-md">
-              Нэвтрэх
-            </button>
+            
           </div>
         </div>
 
