@@ -5,6 +5,12 @@
   --foreground: #171717;
 }
 
+@font-face {
+  font-family: 'Mogul Helios';
+  src: url('/fonts/Mogul Helios.ttf') format('truetype');
+  unicode-range: U+0000-007F; /* Зөвхөн латин үсэг */
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
