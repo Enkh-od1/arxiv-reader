@@ -24,18 +24,47 @@ export default async function Home() {
         <div className="lg:col-span-3 space-y-8">
           
           {/* 1. Сэтгүүлийн тухай товч тодорхойлолт */}
-          <section className="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-blue-100">
+{/* 1. Сэтгүүлийн тухай товч тодорхойлолт */}
+<section className="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-blue-100">
   <h2 className="text-2xl md:text-3xl font-bold text-[#003d71] mb-8 text-center">
     Сэтгүүлийн тухай
   </h2>
 
-  {/* Текстийг ReactMarkdown ашиглан харуулах хэсэг */}
+  {/* Текст контент */}
   <div className="text-slate-700 leading-relaxed text-justify text-sm md:text-base 
                   prose prose-slate max-w-none 
+                  prose-p:my-2
                   prose-strong:font-bold prose-strong:text-[#003d71]">
-    <ReactMarkdown>
-      {journal.focusAndScope || ''}
-    </ReactMarkdown>
+    <p>
+      Төрийн удирдлага онол арга зүйн сэтгүүл нь төрийн захиргаа, удирдахуйн онол, 
+      арга зүйн болон практикийн асуудлын талаарх судлаачдын эрдэм шинжилгээний 
+      ажлын үр дүнг түгээн дэлгэрүүлэх, нийтийн хүртээл болгох зорилготой. 
+      Сэтгүүлийг Удирдлагын академи 2017 оноос эрхлэн гаргаж байна.
+    </p>
+
+    <p>
+      Сэтгүүл нь жилд 2 удаа (4, 10 дугаар сард) тогтмол хэвлэгдэн гарна.
+    </p>
+
+    <p>
+      Судлаачдын монгол, англи хэлээр бичсэн өгүүллийг хүлээн авч, давхар нууцлалтай 
+      хөндлөнгийн хянан магадалгаа хийдэг, нээлттэй хандалттай, онол, арга зүйн сэтгүүл юм.
+    </p>
+
+    <p>
+      Сэтгүүл нь оюуны өмчийн эрхээр бүрэн хамгаалагдсан байна. Уг сэтгүүл нь 
+      Академийн эрдэм шинжилгээний бүтээл, оюуны өмч мөн.
+    </p>
+
+    <strong><p className="my-0!">ISSN (print):  2959-6351</p></strong>
+    <strong><p className="my-0!">ISSN (onine):  3135-4580</p></strong>
+    <strong><p className="my-0!">ISSN-L:        2959-6351</p></strong>
+
+    <p className="mt-4!">
+  Сэтгүүлийн хаяг: Монгол Улс, Улаанбаатар хот, Хан-Уул дүүрэг, 17-р хороо, 
+  Удирдлагын академийн гудамж, Удирдлагын Академийн Б байр, 201, 202 тоот өрөө
+</p>
+
   </div>
 </section>
 
