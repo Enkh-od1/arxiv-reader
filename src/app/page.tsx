@@ -57,7 +57,7 @@ export default async function Home() {
     </p>
 
     <strong><p className="my-0!">ISSN (print):  2959-6351</p></strong>
-    <strong><p className="my-0!">ISSN (onine):  3135-4580</p></strong>
+    <strong><p className="my-0!">ISSN (online):  3135-4580</p></strong>
     <strong><p className="my-0!">ISSN-L:        2959-6351</p></strong>
 
     <p className="mt-4!">
