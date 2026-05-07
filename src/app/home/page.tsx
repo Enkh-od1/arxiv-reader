@@ -2,7 +2,6 @@ import { getJournalInfo, getLatestIssue } from '@/lib/strapi';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Partner, InformationSection } from '@/types/journal';
-import ReactMarkdown from 'react-markdown';
 
 
 export const dynamic = 'force-dynamic';
@@ -24,18 +23,48 @@ export default async function Home() {
         <div className="lg:col-span-3 space-y-8">
           
           {/* 1. Сэтгүүлийн тухай товч тодорхойлолт */}
-          <section className="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-blue-100">
+          {/* 1. Сэтгүүлийн тухай товч тодорхойлолт */}
+<section className="bg-white p-8 md:p-12 rounded-2xl shadow-xl border border-blue-100">
   <h2 className="text-2xl md:text-3xl font-bold text-[#003d71] mb-8 text-center">
     Сэтгүүлийн тухай
   </h2>
 
-  {/* Текстийг ReactMarkdown ашиглан харуулах хэсэг */}
+  {/* Текст контент */}
   <div className="text-slate-700 leading-relaxed text-justify text-sm md:text-base 
                   prose prose-slate max-w-none 
+                  prose-p:my-0
                   prose-strong:font-bold prose-strong:text-[#003d71]">
-    <ReactMarkdown>
-      {journal.focusAndScope || ''}
-    </ReactMarkdown>
+    <p className="my-1!">
+      Төрийн удирдлага онол арга зүйн сэтгүүл нь төрийн захиргаа, удирдахуйн онол, 
+      арга зүйн болон практикийн асуудлын талаарх судлаачдын эрдэм шинжилгээний 
+      ажлын үр дүнг түгээн дэлгэрүүлэх, нийтийн хүртээл болгох зорилготой. 
+      Сэтгүүлийг Удирдлагын академи 2017 оноос эрхлэн гаргаж байна.
+    </p>
+
+    <p className="my-1!">
+      Сэтгүүл нь жилд 2 удаа (4, 10 дугаар сард) тогтмол хэвлэгдэн гарна.
+    </p>
+
+    <p className="my-1!">
+      Судлаачдын монгол, англи хэлээр бичсэн өгүүллийг хүлээн авч, давхар нууцлалтай 
+      хөндлөнгийн хянан магадалгаа хийдэг, нээлттэй хандалттай, онол, арга зүйн сэтгүүл юм.
+    </p>
+
+    <p className="my-1!">
+      Сэтгүүл нь оюуны өмчийн эрхээр бүрэн хамгаалагдсан байна. Уг сэтгүүл нь 
+      Академийн эрдэм шинжилгээний бүтээл, оюуны өмч мөн.
+    </p>
+
+    <div className="space-y-0">
+  <p className="my-0!"><strong>ISSN (print):</strong> 2959-6351</p>
+  <p className="my-0!"><strong>ISSN (online):</strong> 3135-4580</p>
+  <p className="my-0!"><strong>ISSN-L:</strong> 2959-6351</p>
+</div>
+
+    <p className="my-1!">
+      Сэтгүүлийн хаяг: Монгол Улс, Улаанбаатар хот, Хан-Уул дүүрэг, 17-р хороо, 
+      Удирдлагын академийн гудамж, Удирдлагын Академийн Б байр, 201, 202 тоот өрөө
+    </p>
   </div>
 </section>
 
